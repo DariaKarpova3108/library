@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: Library
+  jpa:
+    generate-ddl: true
+    show-sql: true
+    properties:
+      hibernate.default_schema: library
+  output:
+    ansi:
+      enabled: always
+  datasource:
+    url: jdbc:postgresql://localhost:5432/library_db
+    username: postgres
+    password: root
