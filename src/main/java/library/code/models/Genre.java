@@ -22,7 +22,7 @@ import java.util.List;
 @Setter
 @ToString(includeFieldNames = true, onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "genre")
+@Table(name = "genres")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Genre {
     @Id

@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,12 +30,11 @@ public class Author {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @NotEmpty(message = "имя и фамилия автора не может быть пустыми")
-    @NotNull
-    @Column(name = "author_name")
+    @NotEmpty(message = "Имя и фамилия автора не может быть пустыми")
     @ToString.Include
+    @Column(name = "author_name", nullable = false)
     private String fullName;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.MERGE)
     private List<Book> books = new ArrayList<>();
 }

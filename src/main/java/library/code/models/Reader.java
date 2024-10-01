@@ -43,7 +43,6 @@ public class Reader {
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
-
     @NotEmpty(message = "Фамилия не может быть пустой")
     @Size(max = 50)
     @ToString.Include
