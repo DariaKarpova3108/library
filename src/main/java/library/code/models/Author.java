@@ -1,13 +1,6 @@
 package library.code.models;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -30,11 +23,16 @@ public class Author {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @NotEmpty(message = "Имя и фамилия автора не может быть пустыми")
+    @NotEmpty(message = "Имя автора не может быть пустым")
     @ToString.Include
-    @Column(name = "author_name", nullable = false)
-    private String fullName;
+    @Column(name = "first_name", nullable = false)
+    private String firstName;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.MERGE)
+    @NotEmpty(message = "Фамилия автора не может быть пустой")
+    @ToString.Include
+    @Column(name = "last_name", nullable = false)
+    private String lastName;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private List<Book> books = new ArrayList<>();
 }

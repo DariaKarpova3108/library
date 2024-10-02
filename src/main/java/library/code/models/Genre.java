@@ -1,12 +1,11 @@
 package library.code.models;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -15,8 +14,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -33,9 +32,9 @@ public class Genre {
     @NotEmpty(message = "Жанр книги не может быть пустым")
     @ToString.Include
     @Size(max = 50)
-    @Column(name = "type_of_genre", nullable = false)
+    @Column(name = "type_of_genre", nullable = false, unique = true)
     private String typeOfGenre;
 
-    @OneToMany(mappedBy = "genre", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Book> books = new ArrayList<>();
+    @ManyToMany(mappedBy = "genres")
+    private Set<Book> books = new HashSet<>();
 }

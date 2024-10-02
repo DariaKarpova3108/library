@@ -1,24 +1,17 @@
 package library.code.dto.LibraryCardDTO;
 
-import jakarta.validation.constraints.NotNull;
-import library.code.models.Book;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.openapitools.jackson.nullable.JsonNullable;
 
-import java.time.LocalDate;
-
 @Getter
 @Setter
 public class LibraryCardUpdateDTO {
-    @NotNull
-    private JsonNullable<Book> book;
 
-    @NotNull
-    private JsonNullable<LocalDate> borrowDate;
-    @NotNull
-    private JsonNullable<LocalDate> expectedReturn;
+    @JsonProperty("reader_name")
+    private JsonNullable<String> readerFullName;
 
-    @NotNull
+    @JsonProperty("library_card_number")
     private JsonNullable<String> cardNumber;
 }

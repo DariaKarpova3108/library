@@ -1,32 +1,24 @@
 package library.code.dto.LibraryCardDTO;
 
-import jakarta.validation.constraints.NotNull;
-import library.code.models.Book;
-import library.code.models.Reader;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+
 @Getter
 @Setter
 public class LibraryCardDTO {
-    @NotNull
+
     private Long id;
-    @NotNull
-    private Book book;
 
-    @NotNull
-    private Reader reader;
+    @JsonProperty("reader_name")
+    private String readerFullName;
 
-    @NotNull
-    private LocalDate borrowDate;
-
-    @NotNull
-    private LocalDate expectedReturn;
-
-    @NotNull
-    private LocalDate actualDate;
-
-    @NotNull
+    @JsonProperty("library_card_number")
     private String cardNumber;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    private LocalDate createdAt;
 }

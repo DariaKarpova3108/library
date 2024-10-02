@@ -8,5 +8,8 @@ import lombok.Setter;
 @Setter
 public class AuthorCreateDTO {
     @NotNull
-    private String fullName;
+    private String firstName;
+
+    @NotNull
+    private String lastName;
 }

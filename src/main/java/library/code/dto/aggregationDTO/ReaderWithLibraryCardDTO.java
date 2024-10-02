@@ -5,5 +5,5 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ReaderWithLibraryCardDTO {
+public class ReaderWithLibraryCardDTO { //пока не знаю нужен ли этот класс
 }

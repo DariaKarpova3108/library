@@ -1,30 +1,32 @@
 package library.code.dto.BookDTO;
 
-import jakarta.validation.constraints.NotNull;
-import library.code.models.Author;
-import library.code.models.Genre;
-import library.code.models.Publisher;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.openapitools.jackson.nullable.JsonNullable;
 
 import java.time.LocalDate;
+import java.util.Set;
+
 @Getter
 @Setter
 public class BookUpdateDTO {
-    @NotNull
+
     private JsonNullable<String> bookTitle;
 
-    @NotNull
-    private JsonNullable<Author> author;
+    @JsonProperty("author_name")
+    private JsonNullable<String> authorFullName;
 
-    @NotNull
-    private JsonNullable<Publisher> publisher;
+    @JsonProperty("publisher")
+    private JsonNullable<String> publisherTitle;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private JsonNullable<LocalDate> publishedDate;
 
-    @NotNull
-    private JsonNullable<Genre> genre;
-    @NotNull
+    @JsonProperty("genre_types")
+    private JsonNullable<Set<String>> genreTypes;
+
     private JsonNullable<String> ISBN;
+    private JsonNullable<String> directionOfLiterature;
 }

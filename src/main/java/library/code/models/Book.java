@@ -7,9 +7,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Pattern;
 import lombok.EqualsAndHashCode;
@@ -18,6 +21,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -50,12 +55,21 @@ public class Book {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate publishedDate;
 
-    @ManyToOne
-    @JoinColumn(name = "genre_id", referencedColumnName = "id", nullable = false)
-    private Genre genre;
+    @NotNull
+    @ManyToMany
+    @JoinTable(
+            name = "book_genre",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    private Set<Genre> genres = new HashSet<>();
 
     @Pattern(regexp = "\\d{10,13}")
     @ToString.Include
     @Column(name = "isbn", unique = true, nullable = false)
     private String ISBN;
+
+    @ToString.Include
+    @Column(name = "direction_of_literature")
+    private String directionOfLiterature;
 }

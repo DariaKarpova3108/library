@@ -24,6 +24,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 
+//Подумать - может быть добавить роли - Админ и читатель (админ будет добавлять книги, удвлять их и делать все возможное
+// а читатель только читать и искать книги
 @Getter
 @Setter
 @ToString(includeFieldNames = true, onlyExplicitlyIncluded = true)
