@@ -31,7 +31,6 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql:42.7.2'
     runtimeOnly 'com.h2database:h2'
 
-
     implementation 'org.mapstruct:mapstruct:1.6.0'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.0'
     implementation("org.openapitools:jackson-databind-nullable:0.2.6")
