@@ -19,6 +19,7 @@ jobs:
           gradle-version: 8.7
       #      - run: gradle checkstyleMain
       #      - run: make test
+      #
       - name: Build with Gradle
         env:
           SPRING_PROFILES_ACTIVE: ${{ secrets.SPRING_PROFILES_ACTIVE }}
