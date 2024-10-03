@@ -29,7 +29,8 @@ public class BookUpdateDTO {
     @JsonProperty("genre_types")
     private JsonNullable<Set<String>> genreTypes;
 
-    private JsonNullable<String> ISBN;
+    @JsonProperty("ISBN")
+    private JsonNullable<String> isbn;
 
     @JsonProperty("direction_of_literature")
     private JsonNullable<String> directionOfLiterature;

@@ -30,7 +30,7 @@ import java.util.Set;
 @Entity
 @Table(name = "books")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Book  implements BaseEntity{
+public class Book implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
@@ -67,7 +67,7 @@ public class Book  implements BaseEntity{
     @Pattern(regexp = "\\d{10,13}")
     @ToString.Include
     @Column(name = "isbn", unique = true, nullable = false)
-    private String ISBN;
+    private String isbn;
 
     @ToString.Include
     @Column(name = "direction_of_literature")

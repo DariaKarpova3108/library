@@ -32,7 +32,7 @@ public abstract class LibraryCardMapper {
 
     @Mapping(target = "readerFirstName", source = "reader.firstName")
     @Mapping(target = "readerSurname", source = "reader.lastName")
-    @Mapping(target = "borrowedBooks1", source = "borrowedBooks")
+    @Mapping(target = "borrowedBooks", source = "borrowedBooks")
     public abstract LibraryCardDTO map(LibraryCard libraryCard);
 
     @Mapping(target = "reader", source = "readerId", qualifiedByName = "findReader")

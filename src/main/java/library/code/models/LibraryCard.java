@@ -30,7 +30,7 @@ import java.util.Set;
 @Table(name = "library_cards")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @EntityListeners(AuditingEntityListener.class)
-public class LibraryCard implements BaseEntity{
+public class LibraryCard implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include

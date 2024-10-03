@@ -32,7 +32,8 @@ public class BookDTO {
     @JsonProperty("genre_types")
     private Set<String> genreTypes;
 
-    private String ISBN;
+    @JsonProperty("ISBN")
+    private String isbn;
 
     @JsonProperty("direction_of_literature")
     private String directionOfLiterature;
