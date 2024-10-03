@@ -23,7 +23,7 @@ import java.util.Set;
 @Entity
 @Table(name = "genres")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Genre {
+public class Genre implements BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include

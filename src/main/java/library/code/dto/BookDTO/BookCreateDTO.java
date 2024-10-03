@@ -13,17 +13,19 @@ import java.util.Set;
 @Setter
 public class BookCreateDTO {
     @NotNull
+    @JsonProperty("book_title")
     private String bookTitle;
 
     @NotNull
-    @JsonProperty("author_name")
-    private String authorFullName;
+    @JsonProperty("author_id")
+    private Long authorId;
 
     @NotNull
-    @JsonProperty("publisher")
-    private String publisherTitle;
+    @JsonProperty("publisher_id")
+    private Long publisherId;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonProperty("published_date")
     private LocalDate publishedDate;
 
     @NotNull
@@ -33,5 +35,6 @@ public class BookCreateDTO {
     @NotNull
     private String ISBN;
 
+    @JsonProperty("direction_of_literature")
     private String directionOfLiterature;
 }

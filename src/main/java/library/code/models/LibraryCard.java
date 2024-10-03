@@ -21,7 +21,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -31,14 +30,14 @@ import java.util.Set;
 @Table(name = "library_cards")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @EntityListeners(AuditingEntityListener.class)
-public class LibraryCard {
+public class LibraryCard implements BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
 
     @OneToMany(mappedBy = "libraryCard", fetch = FetchType.LAZY)
-    private Set<LibraryCardBooks> borrowedBooks = new HashSet<>();
+    private Set<LibraryCardBooks> borrowedBooks;
 
     @OneToOne
     @JoinColumn(name = "reader_id", referencedColumnName = "id", nullable = false)

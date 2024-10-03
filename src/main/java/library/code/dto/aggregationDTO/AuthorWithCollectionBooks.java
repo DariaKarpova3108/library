@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class AuthorWithCollectionBooks {
+public class AuthorWithCollectionBooks { //добавить маппер емли потребуется этот дто класс
     private AuthorDTO author;
-    private List<BookDTO> books;
+    private List<BookDTO> books; //проверить нужно ли добавлять по этому полю преобразование в маппер
 }

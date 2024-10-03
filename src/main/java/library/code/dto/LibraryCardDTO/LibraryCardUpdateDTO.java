@@ -9,8 +9,8 @@ import org.openapitools.jackson.nullable.JsonNullable;
 @Setter
 public class LibraryCardUpdateDTO {
 
-    @JsonProperty("reader_name")
-    private JsonNullable<String> readerFullName;
+    @JsonProperty("reader_id")
+    private JsonNullable<Long> readerId;
 
     @JsonProperty("library_card_number")
     private JsonNullable<String> cardNumber;

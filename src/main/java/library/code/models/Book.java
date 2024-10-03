@@ -30,7 +30,7 @@ import java.util.Set;
 @Entity
 @Table(name = "books")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Book {
+public class Book  implements BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include

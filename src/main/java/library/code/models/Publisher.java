@@ -22,7 +22,7 @@ import java.util.List;
 @Entity
 @Table(name = "publishers")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Publisher {
+public class Publisher implements BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include

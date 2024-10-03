@@ -12,19 +12,28 @@ import java.util.Set;
 @Setter
 public class BookDTO {
     private Long id;
+
+    @JsonProperty("book_title")
     private String bookTitle;
 
-    @JsonProperty("author_name")
-    private String authorFullName;
+    @JsonProperty("author_first_name")
+    private String authorFirstName;
+
+    @JsonProperty("author_surname")
+    private String authorSurname;
 
     @JsonProperty("publisher")
     private String publisherTitle;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonProperty("published_date")
     private LocalDate publishedDate;
 
     @JsonProperty("genre_types")
     private Set<String> genreTypes;
+
     private String ISBN;
+
+    @JsonProperty("direction_of_literature")
     private String directionOfLiterature;
 }

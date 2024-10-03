@@ -33,7 +33,7 @@ import java.time.LocalDate;
 @Table(name = "readers")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @EntityListeners(AuditingEntityListener.class)
-public class Reader {
+public class Reader implements BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include

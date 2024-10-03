@@ -25,7 +25,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @EntityListeners(AuditingEntityListener.class)
-public class LibraryCardBooks {
+public class LibraryCardBooks implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

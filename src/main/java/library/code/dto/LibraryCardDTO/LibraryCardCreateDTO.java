@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 public class LibraryCardCreateDTO {
     @NotNull
-    @JsonProperty("reader_name")
-    private String readerFullName;
+    @JsonProperty("reader_id")
+    private Long readerId;
 
     @NotNull
     @JsonProperty("library_card_number")

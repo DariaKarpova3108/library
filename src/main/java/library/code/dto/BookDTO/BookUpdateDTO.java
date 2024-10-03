@@ -13,20 +13,24 @@ import java.util.Set;
 @Setter
 public class BookUpdateDTO {
 
+    @JsonProperty("book_title")
     private JsonNullable<String> bookTitle;
 
-    @JsonProperty("author_name")
-    private JsonNullable<String> authorFullName;
+    @JsonProperty("author_id")
+    private JsonNullable<Long> authorId;
 
-    @JsonProperty("publisher")
-    private JsonNullable<String> publisherTitle;
+    @JsonProperty("publisher_id")
+    private JsonNullable<Long> publisherId;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonProperty("published_date")
     private JsonNullable<LocalDate> publishedDate;
 
     @JsonProperty("genre_types")
     private JsonNullable<Set<String>> genreTypes;
 
     private JsonNullable<String> ISBN;
+
+    @JsonProperty("direction_of_literature")
     private JsonNullable<String> directionOfLiterature;
 }
