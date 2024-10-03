@@ -14,7 +14,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -36,5 +35,5 @@ public class Genre implements BaseEntity {
     private String typeOfGenre;
 
     @ManyToMany(mappedBy = "genres")
-    private Set<Book> books = new HashSet<>();
+    private Set<Book> books;
 }
