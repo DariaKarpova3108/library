@@ -1,4 +1,4 @@
-package library.code.controllers.tests;
+package library.code.controllers.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import library.code.dto.ReaderDTO.ReaderCreateDTO;

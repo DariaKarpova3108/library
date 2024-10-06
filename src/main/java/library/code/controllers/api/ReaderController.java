@@ -29,7 +29,7 @@ public class ReaderController {
     @GetMapping
     public ResponseEntity<List<ReaderDTO>> getListReaders() {
         return ResponseEntity.ok()
-                .header("X-Total_Count", String.valueOf(readerService.getAllReaders().size()))
+                .header("X-Total-Count", String.valueOf(readerService.getAllReaders().size()))
                 .body(readerService.getAllReaders());
     }
 
