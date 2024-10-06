@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 public class ReaderService {
 
     private final ReaderRepository readerRepository;
+    private final LibraryCardService libraryCardService;
     private final ReaderMapper readerMapper;
 
     public List<ReaderDTO> getAllReaders() {
@@ -33,6 +34,7 @@ public class ReaderService {
 
     public ReaderDTO createReader(ReaderCreateDTO createDTO) {
         var reader = readerMapper.map(createDTO);
+        reader.setLibraryCard(libraryCardService.createLibraryNumberCard(reader));
         readerRepository.save(reader);
         return readerMapper.map(reader);
     }

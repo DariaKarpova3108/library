@@ -1,6 +1,5 @@
 package library.code.mapper;
 
-import library.code.dto.LibraryCardDTO.LibraryCardCreateDTO;
 import library.code.dto.LibraryCardDTO.LibraryCardDTO;
 import library.code.dto.LibraryCardDTO.LibraryCardUpdateDTO;
 import library.code.exception.ResourceNotFoundException;
@@ -23,12 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public abstract class LibraryCardMapper {
-
     @Autowired
     private ReaderRepository readerRepository;
-
-    @Mapping(target = "reader", source = "readerId", qualifiedByName = "findReader")
-    public abstract LibraryCard map(LibraryCardCreateDTO createDTO);
 
     @Mapping(target = "readerFirstName", source = "reader.firstName")
     @Mapping(target = "readerSurname", source = "reader.lastName")

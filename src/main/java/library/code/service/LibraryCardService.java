@@ -1,15 +1,17 @@
 package library.code.service;
 
-import library.code.dto.LibraryCardDTO.LibraryCardCreateDTO;
 import library.code.dto.LibraryCardDTO.LibraryCardDTO;
 import library.code.dto.LibraryCardDTO.LibraryCardUpdateDTO;
 import library.code.exception.ResourceNotFoundException;
 import library.code.mapper.LibraryCardMapper;
+import library.code.models.LibraryCard;
+import library.code.models.Reader;
 import library.code.repositories.LibraryCardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,10 +33,24 @@ public class LibraryCardService {
         return libraryCardMapper.map(card);
     }
 
-    public LibraryCardDTO createLibraryCard(LibraryCardCreateDTO createDTO) {
-        var card = libraryCardMapper.map(createDTO);
-        libraryCardRepository.save(card);
-        return libraryCardMapper.map(card);
+    public LibraryCard createLibraryNumberCard(Reader reader) {
+        LibraryCard libraryCard = new LibraryCard();
+        libraryCard.setCardNumber(generateUniqueNumberCard());
+        libraryCard.setReader(reader);
+        libraryCardRepository.save(libraryCard);
+        return libraryCard;
+    }
+
+    private String generateUniqueNumberCard() {
+        Random random = new Random();
+        StringBuilder numberCard;
+        do {
+            numberCard = new StringBuilder();
+            for (int i = 0; i < 13; i++) {
+                numberCard.append(random.nextInt(0, 10));
+            }
+        } while (libraryCardRepository.existsByCardNumber(numberCard.toString()));
+        return numberCard.toString();
     }
 
     public LibraryCardDTO updateLibraryCard(LibraryCardUpdateDTO updateDTO, Long id) {

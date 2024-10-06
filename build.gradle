@@ -30,15 +30,18 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-jdbc:3.3.2'
     runtimeOnly 'org.postgresql:postgresql:42.7.2'
     runtimeOnly 'com.h2database:h2'
-
     implementation 'org.mapstruct:mapstruct:1.6.0'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.0'
     implementation("org.openapitools:jackson-databind-nullable:0.2.6")
+    implementation 'net.datafaker:datafaker:2.0.1'
+    implementation 'org.instancio:instancio-junit:3.3.0'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.3.2'
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation("org.springframework.security:spring-security-test")
+    testImplementation 'net.javacrumbs.json-unit:json-unit-assertj:3.2.5'
 }
 
 tasks.named('test') {

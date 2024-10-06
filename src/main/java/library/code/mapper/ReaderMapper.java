@@ -5,6 +5,7 @@ import library.code.dto.ReaderDTO.ReaderDTO;
 import library.code.dto.ReaderDTO.ReaderUpdateDTO;
 import library.code.models.Reader;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
@@ -19,6 +20,7 @@ import org.mapstruct.ReportingPolicy;
 public abstract class ReaderMapper {
     public abstract Reader map(ReaderCreateDTO createDTO);
 
+    @Mapping(target = "libraryCard", source = "libraryCard.cardNumber")
     public abstract ReaderDTO map(Reader reader);
 
     public abstract void update(ReaderUpdateDTO updateDTO, @MappingTarget Reader reader);

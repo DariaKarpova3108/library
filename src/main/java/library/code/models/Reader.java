@@ -1,12 +1,14 @@
 package library.code.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
@@ -52,19 +54,21 @@ public class Reader implements BaseEntity {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-
     @NotEmpty(message = "Номер паспорта не может быть пустым")
     @Pattern(regexp = "^[0-9]{10}$")
     @ToString.Include
     @Column(unique = true, name = "passport_details", nullable = false)
     private String passportDetails;
 
+    @OneToOne(mappedBy = "reader", cascade = CascadeType.ALL)
+    private LibraryCard libraryCard;
+
     @Min(10)
     @Max(100)
     @Column(name = "age")
     private int age;
 
-    @Pattern(regexp = "\\+[0-9]{11}")
+    @Pattern(regexp = "^[0-9]{11}$")
     @ToString.Include
     @Column(name = "phone", nullable = false, unique = true)
     private String phone;

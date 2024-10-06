@@ -19,7 +19,9 @@ import org.mapstruct.ReportingPolicy;
 )
 public abstract class PublisherMapper {
     public abstract Publisher map(PublisherCreateDTO createDTO);
+
     @Mapping(target = "booksFromSamePublisher", source = "books")
     public abstract PublisherDTO map(Publisher publisher);
+
     public abstract void update(PublisherUpdateDTO updateDTO, @MappingTarget Publisher publisher);
 }
