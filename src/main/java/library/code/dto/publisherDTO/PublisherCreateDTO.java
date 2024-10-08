@@ -14,6 +14,6 @@ public class PublisherCreateDTO {
     @NotNull
     private String address;
 
-    @Pattern(regexp = "\\+[0-9]{11}")
+    @Pattern(regexp = "^[0-9]{11}$")
     private String phone;
 }

@@ -1,10 +1,11 @@
 package library.code.controllers.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import library.code.dto.LibraryCardDTO.LibraryCardUpdateDTO;
-import library.code.models.LibraryCard;
-import library.code.models.Reader;
-import library.code.repositories.LibraryCardRepository;
+import library.code.dto.genreDTO.GenreCreateDTO;
+import library.code.dto.genreDTO.GenreDTO;
+import library.code.dto.genreDTO.GenreUpdateDTO;
+import library.code.models.Genre;
+import library.code.repositories.GenreRepository;
 import library.code.util.ModelGenerator;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +24,7 @@ import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -30,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Transactional
-public class LibraryCardControllerTest {
+public class GenreControllerTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
     @Autowired
@@ -38,68 +40,80 @@ public class LibraryCardControllerTest {
     @Autowired
     private ObjectMapper mapper;
     @Autowired
-    private LibraryCardRepository libraryCardRepository;
+    private GenreRepository genreRepository;
     @Autowired
     private ModelGenerator modelGenerator;
-    private LibraryCard libraryCard;
-    private Reader reader;
+    private Genre genre;
 
     @BeforeEach
     public void setUp() {
-        reader = Instancio.of(modelGenerator.getReaderModel()).create();
-        libraryCard = Instancio.of(modelGenerator.getLibraryCardModel()).create();
-        libraryCard.setReader(reader);
-        libraryCardRepository.save(libraryCard);
+        genre = Instancio.of(modelGenerator.getGenreModel()).create();
+        genreRepository.save(genre);
     }
 
     @Test
-    public void testGetListLibraryCards() throws Exception {
-        var request = get("/api/libraryCards");
+    public void testGetListGenres() throws Exception {
+        var request = get("/api/genres");
         var result = mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andReturn();
-
         var body = result.getResponse().getContentAsString();
-
         assertThatJson(body).isArray();
     }
 
     @Test
-    public void testGetLibraryCard() throws Exception {
-        var request = get("/api/libraryCards/" + libraryCard.getId());
+    public void testGetGenre() throws Exception {
+        var request = get("/api/genres/" + genre.getId());
         var result = mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andReturn();
         var body = result.getResponse().getContentAsString();
-
         assertThatJson(body)
-                .and(n -> n.node("reader_first_name").isEqualTo(libraryCard.getReader().getFirstName()))
-                .and(n -> n.node("reader_surname").isEqualTo(libraryCard.getReader().getLastName()));
+                .and(n -> n.node("type_of_genre").isEqualTo(genre.getTypeOfGenre()));
     }
 
     @Test
-    public void testUpdateLibraryCard() throws Exception {
-        var updateDTo = new LibraryCardUpdateDTO();
-        updateDTo.setCardNumber(JsonNullable.of("1111111111111"));
+    public void testCreateGenre() throws Exception {
+        var createDTO = new GenreCreateDTO();
+        createDTO.setTypeOfGenre("Detective");
 
-        var request = put("/api/libraryCards/" + libraryCard.getId())
+        var request = post("/api/genres")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(updateDTo));
+                .content(mapper.writeValueAsString(createDTO));
+        var result = mockMvc.perform(request)
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        var responseBody = result.getResponse().getContentAsString();
+        var genreResponseDTO = mapper.readValue(responseBody, GenreDTO.class);
+
+        assertThat(genreResponseDTO.getTypeOfGenre()).isEqualTo(createDTO.getTypeOfGenre());
+    }
+
+    @Test
+    public void testUpdateGenre() throws Exception {
+        var updateDTO = new GenreUpdateDTO();
+        updateDTO.setTypeOfGenre(JsonNullable.of("Novel"));
+
+        var request = put("/api/genres/" + genre.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(updateDTO));
 
         mockMvc.perform(request)
                 .andExpect(status().isOk());
 
-        var updateCard = libraryCardRepository.findById(libraryCard.getId());
-        assertThat(updateCard).isPresent();
-        assertThat(updateCard.get().getCardNumber()).isEqualTo("1111111111111");
+        var updatedGenre = genreRepository.findByTypeOfGenre("Novel").get();
+
+        assertThat(updatedGenre).isNotNull();
+        assertThat(updatedGenre.getTypeOfGenre()).isEqualTo("Novel");
     }
 
     @Test
-    public void testDelete() throws Exception {
-        var request = delete("/api/libraryCards/" + libraryCard.getId());
+    public void testDeleteGenre() throws Exception {
+        var request = delete("/api/genres/" + genre.getId());
         mockMvc.perform(request)
                 .andExpect(status().isNoContent());
 
-        assertThat(libraryCardRepository.findById(libraryCard.getId())).isEmpty();
+        assertThat(genreRepository.findById(genre.getId())).isEmpty();
     }
 }
