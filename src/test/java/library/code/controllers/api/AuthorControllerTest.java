@@ -1,11 +1,11 @@
 package library.code.controllers.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import library.code.dto.genreDTO.GenreCreateDTO;
-import library.code.dto.genreDTO.GenreDTO;
-import library.code.dto.genreDTO.GenreUpdateDTO;
-import library.code.models.Genre;
-import library.code.repositories.GenreRepository;
+import library.code.dto.AuthorDTO.AuthorCreateDTO;
+import library.code.dto.AuthorDTO.AuthorDTO;
+import library.code.dto.AuthorDTO.AuthorUpdateDTO;
+import library.code.models.Author;
+import library.code.repositories.AuthorRepository;
 import library.code.util.ModelGenerator;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,52 +32,58 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Transactional
-public class GenreControllerTest {
+public class AuthorControllerTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
     @Autowired
     private MockMvc mockMvc;
+
     @Autowired
     private ObjectMapper mapper;
     @Autowired
-    private GenreRepository genreRepository;
-    @Autowired
     private ModelGenerator modelGenerator;
-    private Genre genre;
+    @Autowired
+    private AuthorRepository authorRepository;
+    private Author author;
 
     @BeforeEach
     public void setUp() {
-        genre = Instancio.of(modelGenerator.getGenreModel()).create();
-        genreRepository.save(genre);
+        author = Instancio.of(modelGenerator.getAuthorModel()).create();
+        authorRepository.save(author);
     }
 
     @Test
-    public void testGetListGenres() throws Exception {
-        var request = get("/api/genres");
+    public void testListGetAuthor() throws Exception {
+        var request = get("/api/authors");
         var result = mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andReturn();
+
         var body = result.getResponse().getContentAsString();
         assertThatJson(body).isArray();
     }
 
     @Test
-    public void testGetGenre() throws Exception {
-        var request = get("/api/genres/" + genre.getId());
+    public void testGetAuthor() throws Exception {
+        var request = get("/api/authors/" + author.getId());
         var result = mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andReturn();
+
         var body = result.getResponse().getContentAsString();
+
         assertThatJson(body)
-                .and(n -> n.node("type_of_genre").isEqualTo(genre.getTypeOfGenre()));
+                .and(n -> n.node("first_name").isEqualTo(author.getFirstName()))
+                .and(n -> n.node("last_name").isEqualTo(author.getLastName()));
     }
 
     @Test
-    public void testCreateGenre() throws Exception {
-        var createDTO = new GenreCreateDTO();
-        createDTO.setTypeOfGenre("Detective");
+    public void testCreateAuthor() throws Exception {
+        var createDTO = new AuthorCreateDTO();
+        createDTO.setFirstName("Alexandr");
+        createDTO.setLastName("Pushkin");
 
-        var request = post("/api/genres")
+        var request = post("/api/authors")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(createDTO));
 
@@ -86,35 +92,38 @@ public class GenreControllerTest {
                 .andReturn();
 
         var responseBody = result.getResponse().getContentAsString();
-        var genreResponseDTO = mapper.readValue(responseBody, GenreDTO.class);
+        var authorResponseDTO = mapper.readValue(responseBody, AuthorDTO.class);
 
-        assertThat(genreResponseDTO.getTypeOfGenre()).isEqualTo(createDTO.getTypeOfGenre());
+        assertThat(authorResponseDTO.getFirstName()).isEqualTo("Alexandr");
+        assertThat(authorResponseDTO.getLastName()).isEqualTo("Pushkin");
     }
 
     @Test
-    public void testUpdateGenre() throws Exception {
-        var updateDTO = new GenreUpdateDTO();
-        updateDTO.setTypeOfGenre(JsonNullable.of("Novel"));
+    public void testUpdateAuthor() throws Exception {
+        var updateDTO = new AuthorUpdateDTO();
+        updateDTO.setFirstName(JsonNullable.of("Maxim"));
 
-        var request = put("/api/genres/" + genre.getId())
+        var request = put("/api/authors/" + author.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(updateDTO));
 
-        mockMvc.perform(request)
-                .andExpect(status().isOk());
+        var result = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andReturn();
 
-        var updatedGenre = genreRepository.findByTypeOfGenre("Novel").get();
+        var responseBody = result.getResponse().getContentAsString();
+        var authorResponseDTO = mapper.readValue(responseBody, AuthorDTO.class);
 
-        assertThat(updatedGenre).isNotNull();
-        assertThat(updatedGenre.getTypeOfGenre()).isEqualTo("Novel");
+        assertThat(authorResponseDTO.getFirstName()).isEqualTo("Maxim");
+        assertThat(authorResponseDTO.getLastName()).isEqualTo(author.getLastName());
     }
 
     @Test
-    public void testDeleteGenre() throws Exception {
-        var request = delete("/api/genres/" + genre.getId());
+    public void deleteAuthor() throws Exception {
+        var request = delete("/api/authors/" + author.getId());
         mockMvc.perform(request)
                 .andExpect(status().isNoContent());
 
-        assertThat(genreRepository.findById(genre.getId())).isEmpty();
+        assertThat(authorRepository.findById(author.getId())).isEmpty();
     }
 }
