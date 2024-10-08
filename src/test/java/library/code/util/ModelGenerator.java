@@ -86,7 +86,7 @@ public class ModelGenerator {
                         .toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
                 .ignore(Select.field(Book::getGenres))
                 .supply(Select.field(Book::getIsbn), () -> faker.numerify("#############"))
-                .ignore(Select.field(Book::getDirectionOfLiterature))
+                .supply(Select.field(Book::getDirectionOfLiterature), () -> "Foreign literature")
                 .toModel();
 
         libraryCardBooksModel = Instancio.of(LibraryCardBooks.class)

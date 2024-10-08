@@ -4,7 +4,12 @@ import library.code.dto.AuthorDTO.AuthorCreateDTO;
 import library.code.dto.AuthorDTO.AuthorDTO;
 import library.code.dto.AuthorDTO.AuthorUpdateDTO;
 import library.code.models.Author;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.ReportingPolicy;
 
 @Mapper(
         uses = {JsonNullableMapper.class, ReferenceMapper.class, BookMapper.class},
