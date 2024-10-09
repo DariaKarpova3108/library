@@ -12,3 +12,4 @@ public class ConfigGenerateBeanFaker {
         return new Faker();
     }
 }
+
