@@ -29,5 +29,4 @@ public class LibraryCardDTO {
 
     @JsonProperty("borrowed_books")
     private Set<LibraryCardBookDTO> borrowedBooks;
-    //ДОБАВИЛА В МАППЕР - ПРОВЕРИТЬ РАБОТУ) проверить нужно ли добавлять по этому полю преобразование в маппер
 }
