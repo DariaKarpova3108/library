@@ -117,6 +117,7 @@ public class LibraryCardBooksControllerTest {
 
         var body = result.getResponse().getContentAsString();
 
+        assertThat(body).isNotNull();
         assertThatJson(body).isArray();
     }
 
@@ -129,6 +130,7 @@ public class LibraryCardBooksControllerTest {
 
         var body = result.getResponse().getContentAsString();
 
+        assertThat(body).isNotNull();
         assertThatJson(body)
                 .and(n -> n.node("book_title").isEqualTo(libraryCardBooks.getBook().getBookTitle()))
                 .and(n -> n.node("borrow_date")

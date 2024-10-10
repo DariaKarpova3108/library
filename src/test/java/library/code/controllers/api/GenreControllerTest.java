@@ -57,7 +57,10 @@ public class GenreControllerTest {
         var result = mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andReturn();
+
         var body = result.getResponse().getContentAsString();
+
+        assertThat(body).isNotNull();
         assertThatJson(body).isArray();
     }
 
@@ -67,7 +70,10 @@ public class GenreControllerTest {
         var result = mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andReturn();
+
         var body = result.getResponse().getContentAsString();
+
+        assertThat(body).isNotNull();
         assertThatJson(body)
                 .and(n -> n.node("type_of_genre").isEqualTo(genre.getTypeOfGenre()));
     }

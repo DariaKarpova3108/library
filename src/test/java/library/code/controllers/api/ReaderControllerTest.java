@@ -58,6 +58,8 @@ public class ReaderControllerTest {
                 .andReturn();
 
         var body = result.getResponse().getContentAsString();
+
+        assertThat(body).isNotNull();
         assertThatJson(body).isArray();
     }
 
@@ -69,6 +71,8 @@ public class ReaderControllerTest {
                 .andReturn();
 
         var body = result.getResponse().getContentAsString();
+
+        assertThat(body).isNotNull();
         assertThatJson(body)
                 .and(n -> n.node("email").isEqualTo(reader.getEmail()))
                 .and(n -> n.node("first_name").isEqualTo(reader.getFirstName()));
@@ -92,6 +96,7 @@ public class ReaderControllerTest {
                 .andExpect(status().isCreated());
 
         var createdReader = readerRepository.findByPassportDetails("1234123456").get();
+
         assertThat(createdReader).isNotNull();
         assertThat(createdReader.getEmail()).isEqualTo("test@test.com");
         assertThat(createdReader.getLibraryCard()).isNotNull(); //локига на проверку генерации читательского билета

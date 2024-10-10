@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import library.code.dto.AuthorDTO.AuthorCreateDTO;
 import library.code.dto.AuthorDTO.AuthorDTO;
 import library.code.dto.AuthorDTO.AuthorUpdateDTO;
+import library.code.dto.specificationDTO.AuthorParamDTO;
 import library.code.service.AuthorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,10 +30,12 @@ public class AuthorController {
     private final AuthorService authorService;
 
     @GetMapping
-    public ResponseEntity<List<AuthorDTO>> getListAuthors() {
+    public ResponseEntity<List<AuthorDTO>> getListAuthors(AuthorParamDTO params,
+                                                          @RequestParam(defaultValue = "1") int page) {
+        var result = authorService.getAllAuthors(params, page);
         return ResponseEntity.ok()
-                .header("X-Total-Count", String.valueOf(authorService.getAllAuthors().size()))
-                .body(authorService.getAllAuthors());
+                .header("X-Total-Count", String.valueOf(result.size()))
+                .body(result);
     }
 
     @GetMapping("/{id}")

@@ -61,6 +61,7 @@ public class LibraryCardControllerTest {
 
         var body = result.getResponse().getContentAsString();
 
+        assertThat(body).isNotNull();
         assertThatJson(body).isArray();
     }
 
@@ -70,8 +71,10 @@ public class LibraryCardControllerTest {
         var result = mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andReturn();
+
         var body = result.getResponse().getContentAsString();
 
+        assertThat(body).isNotNull();
         assertThatJson(body)
                 .and(n -> n.node("reader_first_name").isEqualTo(libraryCard.getReader().getFirstName()))
                 .and(n -> n.node("reader_surname").isEqualTo(libraryCard.getReader().getLastName()));

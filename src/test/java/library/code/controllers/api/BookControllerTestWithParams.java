@@ -1,6 +1,5 @@
 package library.code.controllers.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import library.code.models.Author;
 import library.code.models.Book;
 import library.code.models.Genre;
@@ -9,7 +8,6 @@ import library.code.repositories.AuthorRepository;
 import library.code.repositories.BookRepository;
 import library.code.repositories.GenreRepository;
 import library.code.repositories.PublisherRepository;
-import library.code.util.ModelGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +37,6 @@ public class BookControllerTestWithParams {
     private MockMvc mockMvc;
     @Autowired
     private BookRepository bookRepository;
-    @Autowired
-    private ObjectMapper mapper;
-    @Autowired
-    private ModelGenerator modelGenerator;
     @Autowired
     private AuthorRepository authorRepository;
     @Autowired

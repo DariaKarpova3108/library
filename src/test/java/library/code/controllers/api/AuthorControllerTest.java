@@ -37,7 +37,6 @@ public class AuthorControllerTest {
     private WebApplicationContext webApplicationContext;
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private ObjectMapper mapper;
     @Autowired
@@ -50,6 +49,11 @@ public class AuthorControllerTest {
     public void setUp() {
         author = Instancio.of(modelGenerator.getAuthorModel()).create();
         authorRepository.save(author);
+
+        var author1 = Instancio.of(modelGenerator.getAuthorModel()).create();
+        author1.setFirstName("Alexandr");
+        author1.setLastName("Pushkin");
+        authorRepository.save(author1);
     }
 
     @Test
@@ -60,6 +64,8 @@ public class AuthorControllerTest {
                 .andReturn();
 
         var body = result.getResponse().getContentAsString();
+
+        assertThat(body).isNotNull();
         assertThatJson(body).isArray();
     }
 
@@ -72,6 +78,7 @@ public class AuthorControllerTest {
 
         var body = result.getResponse().getContentAsString();
 
+        assertThat(body).isNotNull();
         assertThatJson(body)
                 .and(n -> n.node("first_name").isEqualTo(author.getFirstName()))
                 .and(n -> n.node("last_name").isEqualTo(author.getLastName()));
@@ -94,6 +101,7 @@ public class AuthorControllerTest {
         var responseBody = result.getResponse().getContentAsString();
         var authorResponseDTO = mapper.readValue(responseBody, AuthorDTO.class);
 
+        assertThat(responseBody).isNotNull();
         assertThat(authorResponseDTO.getFirstName()).isEqualTo("Alexandr");
         assertThat(authorResponseDTO.getLastName()).isEqualTo("Pushkin");
     }
@@ -114,6 +122,7 @@ public class AuthorControllerTest {
         var responseBody = result.getResponse().getContentAsString();
         var authorResponseDTO = mapper.readValue(responseBody, AuthorDTO.class);
 
+        assertThat(responseBody).isNotNull();
         assertThat(authorResponseDTO.getFirstName()).isEqualTo("Maxim");
         assertThat(authorResponseDTO.getLastName()).isEqualTo(author.getLastName());
     }
@@ -125,5 +134,51 @@ public class AuthorControllerTest {
                 .andExpect(status().isNoContent());
 
         assertThat(authorRepository.findById(author.getId())).isEmpty();
+    }
+
+    @Test
+    public void getListAuthorsWithParamName() throws Exception {
+        var request = get("/api/authors?firstNameCont=alex");
+        var result = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andReturn();
+
+        var body = result.getResponse().getContentAsString();
+
+        assertThat(body).isNotNull();
+        assertThatJson(body).isArray()
+                .anySatisfy(element -> assertThatJson(element)
+                        .and(n -> n.node("first_name").asString().containsIgnoringCase("alex")));
+    }
+
+    @Test
+    public void getListAuthorParamSurname() throws Exception {
+        var request = get("/api/authors?lastNameCont=push");
+        var result = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andReturn();
+
+        var body = result.getResponse().getContentAsString();
+
+        assertThat(body).isNotNull();
+        assertThatJson(body).isArray()
+                .anySatisfy(element -> assertThatJson(element)
+                        .and(n -> n.node("last_name").asString().containsIgnoringCase("push")));
+    }
+
+    @Test
+    public void getListAuthorsWithAllParams() throws Exception {
+        var request = get("/api/authors?firstNameCont=alex&lastNameCont=push");
+        var result = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andReturn();
+
+        var body = result.getResponse().getContentAsString();
+
+        assertThat(body).isNotNull();
+        assertThatJson(body).isArray()
+                .anySatisfy(element -> assertThatJson(element)
+                        .and(n -> n.node("first_name").asString().containsIgnoringCase("alex"))
+                        .and(n -> n.node("last_name").asString().containsIgnoringCase("push")));
     }
 }

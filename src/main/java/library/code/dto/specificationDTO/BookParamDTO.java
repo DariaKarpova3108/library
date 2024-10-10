@@ -8,8 +8,6 @@ import java.util.Set;
 @Getter
 @Setter
 public class BookParamDTO {
-    private Long id;
-
     private String bookCont;
 
     private String authorFirstNameCont;

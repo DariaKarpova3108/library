@@ -82,6 +82,7 @@ public class BookControllerTest {
 
         var body = result.getResponse().getContentAsString();
 
+        assertThat(body).isNotNull();
         assertThatJson(body).isArray();
     }
 
@@ -94,6 +95,7 @@ public class BookControllerTest {
 
         var body = result.getResponse().getContentAsString();
 
+        assertThat(body).isNotNull();
         assertThatJson(body)
                 .and(n -> n.node("book_title").isEqualTo(book.getBookTitle()))
                 .and(n -> n.node("author_first_name").isEqualTo(book.getAuthor().getFirstName()))

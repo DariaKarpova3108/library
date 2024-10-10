@@ -59,6 +59,8 @@ public class PublisherControllerTest {
                 .andReturn();
 
         var body = result.getResponse().getContentAsString();
+
+        assertThat(body).isNotNull();
         assertThatJson(body).isArray();
     }
 
@@ -68,7 +70,10 @@ public class PublisherControllerTest {
         var result = mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andReturn();
+
         var body = result.getResponse().getContentAsString();
+
+        assertThat(body).isNotNull();
         assertThatJson(body)
                 .and(n -> n.node("title").isEqualTo(publisher.getTitle()));
     }
