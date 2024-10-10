@@ -3,11 +3,15 @@ package library.code.service;
 import library.code.dto.BookDTO.BookCreateDTO;
 import library.code.dto.BookDTO.BookDTO;
 import library.code.dto.BookDTO.BookUpdateDTO;
+import library.code.dto.specificationDTO.BookParamDTO;
 import library.code.exception.ResourceNotFoundException;
 import library.code.mapper.BookMapper;
 import library.code.repositories.BookRepository;
+import library.code.specification.BookSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,10 +21,12 @@ import java.util.stream.Collectors;
 public class BookService {
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
+    private final BookSpecification bookSpecification;
 
 
-    public List<BookDTO> getAllBooks() {
-        return bookRepository.findAll().stream()
+    public List<BookDTO> getAllBooks(BookParamDTO params, @RequestParam(defaultValue = "1") int page) {
+        var spec = bookSpecification.build(params);
+        return bookRepository.findAll(spec, PageRequest.of(page - 1, 10)).stream()
                 .map(bookMapper::map)
                 .collect(Collectors.toList());
     }

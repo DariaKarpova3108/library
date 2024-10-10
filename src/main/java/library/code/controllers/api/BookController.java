@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import library.code.dto.BookDTO.BookCreateDTO;
 import library.code.dto.BookDTO.BookDTO;
 import library.code.dto.BookDTO.BookUpdateDTO;
+import library.code.dto.specificationDTO.BookParamDTO;
 import library.code.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,10 +30,11 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping
-    public ResponseEntity<List<BookDTO>> getListBooks() {
+    public ResponseEntity<List<BookDTO>> getListBooks(BookParamDTO params, @RequestParam(defaultValue = "1") int page) {
+        var result = bookService.getAllBooks(params, page);
         return ResponseEntity.ok()
-                .header("X-Total-Count", String.valueOf(bookService.getAllBooks().size()))
-                .body(bookService.getAllBooks());
+                .header("X-Total-Count", String.valueOf(result.size()))
+                .body(result);
     }
 
     @GetMapping("/{id}")
