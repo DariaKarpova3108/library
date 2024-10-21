@@ -15,10 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.nio.charset.StandardCharsets;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,11 +52,17 @@ public class PublisherControllerTest {
 
     @BeforeEach
     public void setUp() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
+                .apply(SecurityMockMvcConfigurers.springSecurity())
+                .build();
+
         publisher = Instancio.of(modelGenerator.getPublisherModel()).create();
         publisherRepository.save(publisher);
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN", "READER"})
     public void testGetListPublisher() throws Exception {
         var request = get("/api/publishers");
         var result = mockMvc.perform(request)
@@ -65,6 +76,7 @@ public class PublisherControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN", "READER"})
     public void testGetPublisher() throws Exception {
         var request = get("/api/publishers/" + publisher.getId());
         var result = mockMvc.perform(request)
@@ -79,6 +91,7 @@ public class PublisherControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     public void testCreatePublisher() throws Exception {
         var createDTO = new PublisherCreateDTO();
         createDTO.setTitle("newTitle");
@@ -101,6 +114,7 @@ public class PublisherControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     public void testUpdatePublisher() throws Exception {
         var updateDTO = new PublisherUpdateDTO();
         updateDTO.setTitle(JsonNullable.of("updateTitle"));
@@ -119,6 +133,7 @@ public class PublisherControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     public void testDeletePublisher() throws Exception {
         var request = delete("/api/publishers/" + publisher.getId());
         mockMvc.perform(request)

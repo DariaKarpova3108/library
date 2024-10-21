@@ -11,5 +11,4 @@ public class ReaderParamDTO {
     private String passportDetailsCont;
     private String libraryCardNumberCont;
     private String phoneCont;
-    private String emailCont;
 }

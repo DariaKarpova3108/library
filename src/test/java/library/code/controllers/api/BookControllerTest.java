@@ -19,11 +19,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -61,6 +65,11 @@ public class BookControllerTest {
 
     @BeforeEach
     public void setUp() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
+                .apply(SecurityMockMvcConfigurers.springSecurity())
+                .build();
+
         author = Instancio.of(modelGenerator.getAuthorModel()).create();
         publisher = Instancio.of(modelGenerator.getPublisherModel()).create();
         genre = Instancio.of(modelGenerator.getGenreModel()).create();
@@ -74,6 +83,7 @@ public class BookControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN", "READER"})
     public void testGetListBooks() throws Exception {
         var request = get("/api/books");
         var result = mockMvc.perform(request)
@@ -87,6 +97,7 @@ public class BookControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN", "READER"})
     public void testGetBook() throws Exception {
         var request = get("/api/books/" + book.getId());
         var result = mockMvc.perform(request)
@@ -105,6 +116,7 @@ public class BookControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     public void testCreateBook() throws Exception {
         var createDTO = new BookCreateDTO();
         createDTO.setBookTitle("Book");
@@ -129,6 +141,7 @@ public class BookControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     public void testUpdateBook() throws Exception {
         var updateDTO = new BookUpdateDTO();
         updateDTO.setBookTitle(JsonNullable.of("newBook"));
@@ -149,6 +162,7 @@ public class BookControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     public void testDeleteBook() throws Exception {
         var request = delete("/api/books/" + book.getId());
         mockMvc.perform(request)

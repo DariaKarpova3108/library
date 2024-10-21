@@ -24,11 +24,11 @@ public class ReaderDTO {
     @JsonProperty("library_card_number")
     private String libraryCard;
 
+    private String email;
+
     private int age;
 
     private String phone;
-
-    private String email;
 
     private String address;
 

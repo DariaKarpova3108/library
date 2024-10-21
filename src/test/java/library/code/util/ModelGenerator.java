@@ -1,6 +1,7 @@
 package library.code.util;
 
 import jakarta.annotation.PostConstruct;
+import library.code.models.Administrator;
 import library.code.models.Author;
 import library.code.models.Book;
 import library.code.models.Genre;
@@ -34,6 +35,7 @@ public class ModelGenerator {
     private Model<Genre> genreModel;
     private Model<Book> bookModel;
     private Model<LibraryCardBooks> libraryCardBooksModel;
+    private Model<Administrator> administratorModel;
 
     @PostConstruct
     public void generateModel() {
@@ -45,8 +47,15 @@ public class ModelGenerator {
                 .supply(Select.field(Reader::getAge), () -> faker.number().numberBetween(10, 100))
                 .supply(Select.field(Reader::getPassportDetails), () -> faker.numerify("##########"))
                 .supply(Select.field(Reader::getPhone), () -> faker.numerify("###########"))
-                .supply(Select.field(Reader::getEmail), () -> faker.internet().emailAddress())
                 .supply(Select.field(Reader::getAddress), () -> faker.address().fullAddress())
+                .ignore(Select.field(Reader::getUser))
+                .toModel();
+
+        administratorModel = Instancio.of(Administrator.class)
+                .ignore(Select.field(Administrator::getId))
+                .supply(Select.field(Administrator::getJobTitle), () -> "admin")
+                .supply(Select.field(Administrator::getPhone), () -> faker.numerify("###########"))
+                .ignore(Select.field(Administrator::getUser))
                 .toModel();
 
         libraryCardModel = Instancio.of(LibraryCard.class)
@@ -94,7 +103,8 @@ public class ModelGenerator {
                 .ignore(Select.field(LibraryCardBooks::getBook))
                 .ignore(Select.field(LibraryCardBooks::getLibraryCard))
                 .supply(Select.field(LibraryCardBooks::getBorrowDate), () -> LocalDate.now())
-                .supply(Select.field(LibraryCardBooks::getExpectedReturn), () -> LocalDate.now().plusWeeks(3))
+                .supply(Select.field(LibraryCardBooks::getExpectedReturn),
+                        () -> LocalDate.now().plusWeeks(3))
                 .supply(Select.field(LibraryCardBooks::getActualDate), () -> null)
                 .toModel();
     }

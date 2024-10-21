@@ -21,7 +21,5 @@ public class ReaderUpdateDTO {
 
     private JsonNullable<String> phone;
 
-    private JsonNullable<String> email;
-
     private JsonNullable<String> address;
 }

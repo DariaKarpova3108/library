@@ -1,6 +1,7 @@
 package library.code.controllers.api;
 
 import jakarta.validation.Valid;
+import library.code.dto.LibraryCardDTO.LibraryCardDTO;
 import library.code.dto.ReaderDTO.ReaderCreateDTO;
 import library.code.dto.ReaderDTO.ReaderDTO;
 import library.code.dto.ReaderDTO.ReaderUpdateDTO;
@@ -9,6 +10,7 @@ import library.code.service.ReaderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,11 +28,13 @@ import java.util.List;
 @RequestMapping("/api/readers")
 @RequiredArgsConstructor
 public class ReaderController {
+
     private final ReaderService readerService;
 
     @GetMapping
-    public ResponseEntity<List<ReaderDTO>> getListReaders(ReaderParamDTO params,
-                                                          @RequestParam(defaultValue = "1") int page) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<ReaderDTO>> getListReadersProfiles(ReaderParamDTO params,
+                                                                  @RequestParam(defaultValue = "1") int page) {
         var result = readerService.getAllReaders(params, page);
         return ResponseEntity.ok()
                 .header("X-Total-Count", String.valueOf(result.size()))
@@ -39,25 +43,37 @@ public class ReaderController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ReaderDTO getReader(@PathVariable Long id) {
+    @PreAuthorize("hasRole('ADMIN') or @readerUtils.checkCurrentReader(#id)")
+    public ReaderDTO getReaderProfile(@PathVariable Long id) {
         return readerService.getReader(id);
     }
 
-    @PostMapping
+
+    @GetMapping("/{readerId}/libraryCard")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN') or @readerUtils.checkCurrentReader(#readerId)")
+    public LibraryCardDTO getLibraryCard(@PathVariable Long readerId) {
+        return readerService.getLibraryCardByReaderId(readerId);
+    }
+
+    @PostMapping("/{userId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ReaderDTO createNewReader(@RequestBody @Valid ReaderCreateDTO createDTO) {
-        return readerService.createReader(createDTO);
+    @PreAuthorize("hasRole('ADMIN') or @userUtils.checkCurrentUser(#userId)")
+    public ReaderDTO completeReaderProfile(@PathVariable Long userId, @RequestBody @Valid ReaderCreateDTO createDTO) {
+        return readerService.completeReaderProfile(userId, createDTO);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ReaderDTO updateReader(@RequestBody @Valid ReaderUpdateDTO updateDTO, @PathVariable Long id) {
+    @PreAuthorize("hasRole('ADMIN') or @readerUtils.checkCurrentReader(#id)")
+    public ReaderDTO updateReaderProfile(@RequestBody @Valid ReaderUpdateDTO updateDTO, @PathVariable Long id) {
         return readerService.updateReader(updateDTO, id);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteReader(@PathVariable Long id) {
+    @PreAuthorize("hasRole('ADMIN') or @readerUtils.checkCurrentReader(#id)")
+    public void deleteReaderProfile(@PathVariable Long id) {
         readerService.deleteReader(id);
     }
 }

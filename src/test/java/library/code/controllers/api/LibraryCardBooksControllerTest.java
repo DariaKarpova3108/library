@@ -11,6 +11,9 @@ import library.code.models.LibraryCard;
 import library.code.models.LibraryCardBooks;
 import library.code.models.Publisher;
 import library.code.models.Reader;
+import library.code.models.Role;
+import library.code.models.RoleName;
+import library.code.models.User;
 import library.code.repositories.AuthorRepository;
 import library.code.repositories.BookRepository;
 import library.code.repositories.GenreRepository;
@@ -18,6 +21,8 @@ import library.code.repositories.LibraryCardBooksRepository;
 import library.code.repositories.LibraryCardRepository;
 import library.code.repositories.PublisherRepository;
 import library.code.repositories.ReaderRepository;
+import library.code.repositories.RoleRepository;
+import library.code.repositories.UserRepository;
 import library.code.util.ModelGenerator;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,11 +32,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
@@ -39,6 +49,7 @@ import java.util.Set;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -72,12 +83,23 @@ public class LibraryCardBooksControllerTest {
     private GenreRepository genreRepository;
     @Autowired
     private ReaderRepository readerRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private RoleRepository roleRepository;
     private Book book;
     private LibraryCard libraryCard;
     private LibraryCardBooks libraryCardBooks;
+    private User user;
+    private SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor token;
 
     @BeforeEach
     public void setUp() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
+                .apply(SecurityMockMvcConfigurers.springSecurity())
+                .build();
+
         Publisher publisher = Instancio.of(modelGenerator.getPublisherModel()).create();
         publisherRepository.save(publisher);
 
@@ -87,7 +109,17 @@ public class LibraryCardBooksControllerTest {
         Author author = Instancio.of(modelGenerator.getAuthorModel()).create();
         authorRepository.save(author);
 
+        Role readerRole = roleRepository.findByRoleName(RoleName.READER)
+                .orElseThrow(() -> new RuntimeException("Role READER not found"));
+
+        user = new User();
+        user.setEmail("reader@example.com");
+        user.setPasswordDigest("hashedPassword");
+        user.setRole(readerRole);
+        userRepository.save(user);
+
         Reader reader = Instancio.of(modelGenerator.getReaderModel()).create();
+        reader.setUser(user);
         readerRepository.save(reader);
 
         libraryCard = Instancio.of(modelGenerator.getLibraryCardModel()).create();
@@ -106,9 +138,15 @@ public class LibraryCardBooksControllerTest {
         libraryCardBooks.setBook(book);
         libraryCardBooks.setLibraryCard(libraryCard);
         cardBooksRepository.save(libraryCardBooks);
+
+        token = jwt().jwt(builder -> builder
+                .subject(reader.getUser().getEmail())
+                .claim("role", reader.getUser().getRole().getRoleName().name())
+                .build());
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     public void getListLibraryBooks() throws Exception {
         var request = get("/api/libraryCardBooks");
         var result = mockMvc.perform(request)
@@ -122,6 +160,7 @@ public class LibraryCardBooksControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     public void getLibraryBooks() throws Exception {
         var request = get("/api/libraryCardBooks/" + libraryCardBooks.getId());
         var result = mockMvc.perform(request)
@@ -138,12 +177,13 @@ public class LibraryCardBooksControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     public void createLibraryBooks() throws Exception {
         var createDTO = new LibraryCardBookCreateDTO();
         createDTO.setBookId(book.getId());
         createDTO.setLibraryCardNumber(libraryCard.getCardNumber());
         createDTO.setBorrowDate(LocalDate.now());
-        createDTO.setExpectedReturn(LocalDate.now().plusWeeks(3));
+        createDTO.setExpectedReturn(LocalDate.now().plusWeeks(4));
         var request = post("/api/libraryCardBooks")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(createDTO));
@@ -162,6 +202,7 @@ public class LibraryCardBooksControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     public void updateLibraryBooks() throws Exception {
         var updateDTO = new LibraryCardBookUpdateDTO();
         var expectedReturn = LocalDate.now().plusMonths(2);
@@ -185,6 +226,7 @@ public class LibraryCardBooksControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     public void deleteLibraryBooks() throws Exception {
         var request = delete("/api/libraryCardBooks/" + libraryCardBooks.getId());
 

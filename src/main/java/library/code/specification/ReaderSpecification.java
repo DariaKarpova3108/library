@@ -12,8 +12,7 @@ public class ReaderSpecification {
                 .and(withLastNameCont(params.getLastNameCont()))
                 .and(withPassportDetailsCont(params.getPassportDetailsCont()))
                 .and(withLibraryCardCont(params.getLibraryCardNumberCont()))
-                .and(withPhoneCont(params.getPhoneCont()))
-                .and(withEmailCont(params.getEmailCont()));
+                .and(withPhoneCont(params.getPhoneCont()));
     }
 
     private Specification<Reader> withFirstNameCont(String firstNameCont) {
@@ -63,16 +62,6 @@ public class ReaderSpecification {
             }
             return criteriaBuilder.like(criteriaBuilder.lower(root.get("phone")),
                     "%" + phoneCont.toLowerCase() + "%");
-        });
-    }
-
-    private Specification<Reader> withEmailCont(String emailCont) {
-        return ((root, query, criteriaBuilder) -> {
-            if (emailCont == null || emailCont.isEmpty()) {
-                return criteriaBuilder.conjunction();
-            }
-            return criteriaBuilder.like(criteriaBuilder.lower(root.get("email")),
-                    "%" + emailCont + "%");
         });
     }
 }

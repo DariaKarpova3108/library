@@ -13,11 +13,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,6 +49,11 @@ public class BookControllerTestWithParams {
     private PublisherRepository publisherRepository;
     @BeforeEach
     public void setUp() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
+                .apply(SecurityMockMvcConfigurers.springSecurity())
+                .build();
+
         var author = new Author();
         author.setFirstName("Kathleen");
         author.setLastName("Rowling");
@@ -110,6 +119,7 @@ public class BookControllerTestWithParams {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN", "READER"})
     public void testFilterGetListBookWithBookTitleCont() throws Exception {
         var request = get("/api/books?bookCont=Harry Potter");
         var result = mockMvc.perform(request)
@@ -125,6 +135,7 @@ public class BookControllerTestWithParams {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN", "READER"})
     public void testFilterBooksByAuthorFirstAndLastName() throws Exception {
         var request = get("/api/books?authorFirstNameCont=Leo&authorSurnameCont=Tolstoy");
         var result = mockMvc.perform(request)
@@ -140,6 +151,7 @@ public class BookControllerTestWithParams {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN", "READER"})
     public void testFilterWithPublisherTitleCont() throws Exception {
         var request = get("/api/books?publisherTitleCont=AST");
         var result = mockMvc.perform(request)
@@ -155,6 +167,7 @@ public class BookControllerTestWithParams {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN", "READER"})
     public void testWithContGenreTypes() throws Exception {
         var request = get("/api/books?genreTypes=Fantasy&genreTypes=Horror");
         var result = mockMvc.perform(request)
@@ -170,6 +183,7 @@ public class BookControllerTestWithParams {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN", "READER"})
     public void testFilterBookWithDirectionOfLiterature() throws Exception {
         var request = get("/api/books?directionOfLiterature=Domestic literature");
         var result = mockMvc.perform(request)
@@ -184,6 +198,7 @@ public class BookControllerTestWithParams {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN", "READER"})
     public void testWithAllFilterForBook() throws Exception {
         var request = get("/api/books")
                 .param("bookCont", "War")

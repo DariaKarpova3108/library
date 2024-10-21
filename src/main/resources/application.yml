@@ -9,4 +9,19 @@ spring:
       enabled: always
   profiles:
 #    active: ${SPRING_PROFILES_ACTIVE}
-    active: test
+    active: dev
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    org.springframework.security: trace
+
+rsa:
+  private-key: classpath:certs/private.pem
+  public-key: classpath:certs/public.pem
+
+server:
+  port: 9090

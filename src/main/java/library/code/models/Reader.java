@@ -10,7 +10,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
@@ -73,15 +72,13 @@ public class Reader implements BaseEntity {
     @Column(name = "phone", nullable = false, unique = true)
     private String phone;
 
-    @Email
-    @ToString.Include
-    @Column(name = "email", nullable = false)
-    private String email;
-
     @NotEmpty(message = "Адрес должен содержать место фактического проживания: ул., дом, кв.")
     @Size(max = 255)
     @Column(name = "address")
     private String address;
+
+    @OneToOne(mappedBy = "reader", cascade = CascadeType.ALL, optional = true)
+    private User user;
 
     @CreatedDate
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")

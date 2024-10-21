@@ -12,7 +12,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(
-        uses = {JsonNullableMapper.class, ReferenceMapper.class},
+        uses = {JsonNullableMapper.class, ReferenceMapper.class, UserMapper.class},
         componentModel = MappingConstants.ComponentModel.SPRING,
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
@@ -21,6 +21,7 @@ public abstract class ReaderMapper {
     public abstract Reader map(ReaderCreateDTO createDTO);
 
     @Mapping(target = "libraryCard", source = "libraryCard.cardNumber")
+    @Mapping(target = "email", source = "user.email")
     public abstract ReaderDTO map(Reader reader);
 
     public abstract void update(ReaderUpdateDTO updateDTO, @MappingTarget Reader reader);

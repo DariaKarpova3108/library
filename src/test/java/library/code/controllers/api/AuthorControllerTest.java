@@ -15,10 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.nio.charset.StandardCharsets;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,6 +52,11 @@ public class AuthorControllerTest {
 
     @BeforeEach
     public void setUp() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
+                .apply(SecurityMockMvcConfigurers.springSecurity())
+                .build();
+
         author = Instancio.of(modelGenerator.getAuthorModel()).create();
         authorRepository.save(author);
 
@@ -57,6 +67,7 @@ public class AuthorControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN", "READER"})
     public void testListGetAuthor() throws Exception {
         var request = get("/api/authors");
         var result = mockMvc.perform(request)
@@ -70,6 +81,7 @@ public class AuthorControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN", "READER"})
     public void testGetAuthor() throws Exception {
         var request = get("/api/authors/" + author.getId());
         var result = mockMvc.perform(request)
@@ -85,6 +97,7 @@ public class AuthorControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     public void testCreateAuthor() throws Exception {
         var createDTO = new AuthorCreateDTO();
         createDTO.setFirstName("Alexandr");
@@ -99,14 +112,16 @@ public class AuthorControllerTest {
                 .andReturn();
 
         var responseBody = result.getResponse().getContentAsString();
+        assertThat(responseBody).isNotNull();
+
         var authorResponseDTO = mapper.readValue(responseBody, AuthorDTO.class);
 
-        assertThat(responseBody).isNotNull();
         assertThat(authorResponseDTO.getFirstName()).isEqualTo("Alexandr");
         assertThat(authorResponseDTO.getLastName()).isEqualTo("Pushkin");
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     public void testUpdateAuthor() throws Exception {
         var updateDTO = new AuthorUpdateDTO();
         updateDTO.setFirstName(JsonNullable.of("Maxim"));
@@ -128,6 +143,7 @@ public class AuthorControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     public void deleteAuthor() throws Exception {
         var request = delete("/api/authors/" + author.getId());
         mockMvc.perform(request)
@@ -137,6 +153,7 @@ public class AuthorControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN", "READER"})
     public void getListAuthorsWithParamName() throws Exception {
         var request = get("/api/authors?firstNameCont=alex");
         var result = mockMvc.perform(request)
@@ -152,6 +169,7 @@ public class AuthorControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN", "READER"})
     public void getListAuthorParamSurname() throws Exception {
         var request = get("/api/authors?lastNameCont=push");
         var result = mockMvc.perform(request)
@@ -167,6 +185,7 @@ public class AuthorControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN", "READER"})
     public void getListAuthorsWithAllParams() throws Exception {
         var request = get("/api/authors?firstNameCont=alex&lastNameCont=push");
         var result = mockMvc.perform(request)

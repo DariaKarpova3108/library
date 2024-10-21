@@ -10,10 +10,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.nio.charset.StandardCharsets;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,15 +43,20 @@ public class ReaderControllerTestWithParams {
 
     @BeforeEach
     public void setUp() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
+                .apply(SecurityMockMvcConfigurers.springSecurity())
+                .build();
+
         var reader = new Reader();
         reader.setFirstName("Masha");
         reader.setLastName("Ivanova");
         reader.setPassportDetails("1230007779");
-        reader.setEmail("masha@example.com");
         reader.setPhone("89007896769");
         reader.setAddress("Moscow, street Rad Street, h.1");
         reader.setAge(23);
         readerRepository.save(reader);
+
         var libraryCard = new LibraryCard();
         libraryCard.setCardNumber("0000000000011");
         libraryCard.setReader(reader);
@@ -57,11 +67,11 @@ public class ReaderControllerTestWithParams {
         reader2.setFirstName("Ivan");
         reader2.setLastName("Testov");
         reader2.setPassportDetails("2347009978");
-        reader2.setEmail("IvaN@example.ru");
         reader2.setAge(25);
         reader2.setPhone("89117890054");
         reader2.setAddress("Moscow, street Blue Street, h.8");
         readerRepository.save(reader2);
+
         var libraryCard2 = new LibraryCard();
         libraryCard2.setCardNumber("1100000000123");
         libraryCard2.setReader(reader2);
@@ -70,6 +80,7 @@ public class ReaderControllerTestWithParams {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     public void testFilterWithFirstNameCont() throws Exception {
         var request = get("/api/readers?firstNameCont=mash");
         var result = mockMvc.perform(request)
@@ -85,6 +96,7 @@ public class ReaderControllerTestWithParams {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     public void testFilterWithLastNameCont() throws Exception {
         var request = get("/api/readers?lastNameCont=testov");
         var result = mockMvc.perform(request)
@@ -100,6 +112,7 @@ public class ReaderControllerTestWithParams {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     public void testFilterPassportDetails() throws Exception {
         var request = get("/api/readers?passportDetailsCont=700997");
         var result = mockMvc.perform(request)
@@ -115,6 +128,7 @@ public class ReaderControllerTestWithParams {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     public void testFilterLibraryCardNumberCont() throws Exception {
         var request = get("/api/readers?libraryCardNumberCont=0000");
         var result = mockMvc.perform(request)
@@ -130,6 +144,7 @@ public class ReaderControllerTestWithParams {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     public void testFilterPhoneCont() throws Exception {
         var request = get("/api/readers?phoneCont=8900");
         var result = mockMvc.perform(request)
@@ -145,29 +160,14 @@ public class ReaderControllerTestWithParams {
     }
 
     @Test
-    public void testFilterEmailCont() throws Exception {
-        var request = get("/api/readers?emailCont=ivan@example");
-        var result = mockMvc.perform(request)
-                .andExpect(status().isOk())
-                .andReturn();
-
-        var body = result.getResponse().getContentAsString();
-
-        assertThat(body).isNotNull();
-        assertThatJson(body).isArray().hasSize(1)
-                .anySatisfy(element -> assertThatJson(element)
-                        .and(n -> n.node("email").asString().containsIgnoringCase("ivan@example")));
-    }
-
-    @Test
+    @WithMockUser(roles = {"ADMIN"})
     public void testAllFilter() throws Exception {
         var request = get("/api/readers")
                 .param("firstNameCont", "mash")
                 .param("lastNameCont", "ivano")
                 .param("passportDetailsCont", "1230")
                 .param("libraryCardNumberCont", "000000")
-                .param("phoneCont", "8900")
-                .param("emailCont", "masha@example");
+                .param("phoneCont", "8900");
 
         var result = mockMvc.perform(request)
                 .andExpect(status().isOk())
@@ -182,7 +182,6 @@ public class ReaderControllerTestWithParams {
                         .and(n -> n.node("last_name").asString().containsIgnoringCase("Ivanova"))
                         .and(n -> n.node("passport_details").asString().containsIgnoringCase("1230"))
                         .and(n -> n.node("library_card_number").asString().containsIgnoringCase("000000"))
-                        .and(n -> n.node("phone").asString().containsIgnoringCase("8900"))
-                        .and(n -> n.node("email").asString().containsIgnoringCase("masha@example.com")));
+                        .and(n -> n.node("phone").asString().containsIgnoringCase("8900")));
     }
 }

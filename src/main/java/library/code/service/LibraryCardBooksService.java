@@ -5,10 +5,13 @@ import library.code.dto.LibraryCardBooksDTO.LibraryCardBookDTO;
 import library.code.dto.LibraryCardBooksDTO.LibraryCardBookUpdateDTO;
 import library.code.exception.ResourceNotFoundException;
 import library.code.mapper.LibraryCardBookMapper;
+import library.code.models.LibraryCardBooks;
 import library.code.repositories.LibraryCardBooksRepository;
+import library.code.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +21,7 @@ public class LibraryCardBooksService {
     private final LibraryCardBooksRepository cardBooksRepository;
     private final LibraryCardBookMapper cardBookMapper;
 
+    private final UserRepository userRepository;
 
     public List<LibraryCardBookDTO> getAllCardBooks() {
         return cardBooksRepository.findAll().stream()
@@ -32,9 +36,12 @@ public class LibraryCardBooksService {
         return cardBookMapper.map(cardBooks);
     }
 
+
     public LibraryCardBookDTO createCardBooks(LibraryCardBookCreateDTO createDTO) {
         var cardBooks = cardBookMapper.map(createDTO);
         cardBooksRepository.save(cardBooks);
+        LocalDate expectedReturnDate = cardBooks.getBorrowDate().plusWeeks(4);
+        cardBooks.setExpectedReturn(expectedReturnDate);
         return cardBookMapper.map(cardBooks);
     }
 
@@ -49,5 +56,11 @@ public class LibraryCardBooksService {
 
     public void deleteCardBooks(Long id) {
         cardBooksRepository.deleteById(id);
+    }
+
+    public boolean isReaderOwnerOfBook(Long libraryCardBookId, Long readerId) {
+        LibraryCardBooks cardBooks = cardBooksRepository.findById(libraryCardBookId)
+                .orElseThrow(() -> new ResourceNotFoundException("Library card with books not found"));
+        return cardBooks.getLibraryCard().getReader().getId().equals(readerId);
     }
 }

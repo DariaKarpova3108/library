@@ -7,6 +7,7 @@ import library.code.service.LibraryCardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +27,7 @@ public class LibraryCardController {
     private final LibraryCardService libraryCardService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<LibraryCardDTO>> getListLibraryCards() {
         return ResponseEntity.ok()
                 .header("X-Total-Count", String.valueOf(libraryCardService.getAllCards().size()))
@@ -34,18 +36,22 @@ public class LibraryCardController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public LibraryCardDTO getLibraryCard(@PathVariable Long id) {
         return libraryCardService.getLibraryCard(id);
     }
 
+
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public LibraryCardDTO updateLibraryCard(@RequestBody @Valid LibraryCardUpdateDTO updateDTO, @PathVariable Long id) {
         return libraryCardService.updateLibraryCard(updateDTO, id);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteLibraryCard(@PathVariable Long id) {
         libraryCardService.deleteLibraryCard(id);
     }

@@ -30,8 +30,5 @@ public class ReaderCreateDTO {
     @Pattern(regexp = "^[0-9]{11}$")
     private String phone;
 
-    @NotNull
-    private String email;
-
     private String address;
 }
