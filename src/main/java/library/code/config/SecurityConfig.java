@@ -24,31 +24,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import java.util.ArrayList;
 import java.util.Collection;
 
-
-/*.requestMatchers("/api/users/**").hasAnyRole("ADMIN", "READER")
-                   .requestMatchers(HttpMethod.GET, "/api/publishers/**").hasAnyRole("ADMIN",
-                           "READER")
-                   .requestMatchers("/api/readers/**").hasRole("ADMIN")
-                   .requestMatchers("/api/publishers/**").hasRole("ADMIN")
-                   .requestMatchers(HttpMethod.GET, "/api/libraryCards/**").hasAnyRole("ADMIN",
-                           "READER")
-                   .requestMatchers(HttpMethod.GET, "/api/authors/**").hasAnyRole("ADMIN",
-                           "READER")
-                   .requestMatchers(HttpMethod.GET, "/api/books/**").hasAnyRole("ADMIN", "READER")
-                   .requestMatchers(HttpMethod.GET, "/api/genres/**").hasAnyRole("ADMIN",
-                           "READER")
-                   .requestMatchers("/api/administrations/**").hasRole("ADMIN")
-                   .requestMatchers(HttpMethod.GET, "/api/libraryCardBooks/**")
-                   .hasAnyRole("ADMIN", "READER")
-                   .requestMatchers(HttpMethod.PUT, "/api/libraryCardBooks/**")
-                   .hasAnyRole("ADMIN", "READER")*/
-
-//    @Bean
-//    public AuthenticationManager authenticationManager(HttpSecurity httpSecurity) throws Exception {
-//        return httpSecurity.getSharedObject(AuthenticationManagerBuilder.class)
-//                .build();
-//    }
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor

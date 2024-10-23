@@ -18,7 +18,7 @@ The project is built on the following technologies:
 - **Database**: H2 (for development), PostgreSQL (for production and development)
 - **Authentication and security**: Spring Security, JWT
 - **API documentation**: Springdoc OpenAPI, Swagger
-- **Testing**: JUnit 5, MockWebServer, Datafaker
+- **Testing**: JUnit 5, MockWebServer, Datafaker, Instancio
 - **Deployment**: Docker
 
 ## Project structure
