@@ -1,7 +1,7 @@
 package library.code.service;
 
-import library.code.dto.LibraryCardDTO.LibraryCardDTO;
-import library.code.dto.LibraryCardDTO.LibraryCardUpdateDTO;
+import library.code.dto.libraryCardDTO.LibraryCardDTO;
+import library.code.dto.libraryCardDTO.LibraryCardUpdateDTO;
 import library.code.exception.ResourceNotFoundException;
 import library.code.mapper.LibraryCardMapper;
 import library.code.models.LibraryCard;

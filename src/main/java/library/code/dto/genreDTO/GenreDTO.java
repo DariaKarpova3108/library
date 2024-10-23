@@ -1,7 +1,7 @@
 package library.code.dto.genreDTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import library.code.dto.BookDTO.BookDTO;
+import library.code.dto.bookDTO.BookDTO;
 import lombok.Getter;
 import lombok.Setter;
 

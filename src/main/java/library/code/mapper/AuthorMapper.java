@@ -1,8 +1,8 @@
 package library.code.mapper;
 
-import library.code.dto.AuthorDTO.AuthorCreateDTO;
-import library.code.dto.AuthorDTO.AuthorDTO;
-import library.code.dto.AuthorDTO.AuthorUpdateDTO;
+import library.code.dto.authorDTO.AuthorCreateDTO;
+import library.code.dto.authorDTO.AuthorDTO;
+import library.code.dto.authorDTO.AuthorUpdateDTO;
 import library.code.models.Author;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

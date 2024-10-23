@@ -1,8 +1,7 @@
-package library.code.dto.BookDTO;
+package library.code.dto.bookDTO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,28 +10,28 @@ import java.util.Set;
 
 @Getter
 @Setter
-public class BookCreateDTO {
-    @NotNull
+public class BookDTO {
+    private Long id;
+
     @JsonProperty("book_title")
     private String bookTitle;
 
-    @NotNull
-    @JsonProperty("author_id")
-    private Long authorId;
+    @JsonProperty("author_first_name")
+    private String authorFirstName;
 
-    @NotNull
-    @JsonProperty("publisher_id")
-    private Long publisherId;
+    @JsonProperty("author_surname")
+    private String authorSurname;
+
+    @JsonProperty("publisher")
+    private String publisherTitle;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @JsonProperty("published_date")
     private LocalDate publishedDate;
 
-    @NotNull
     @JsonProperty("genre_types")
     private Set<String> genreTypes;
 
-    @NotNull
     @JsonProperty("ISBN")
     private String isbn;
 

@@ -1,8 +1,8 @@
 package library.code.controllers.api;
 
 import jakarta.validation.Valid;
-import library.code.dto.LibraryCardDTO.LibraryCardDTO;
-import library.code.dto.LibraryCardDTO.LibraryCardUpdateDTO;
+import library.code.dto.libraryCardDTO.LibraryCardDTO;
+import library.code.dto.libraryCardDTO.LibraryCardUpdateDTO;
 import library.code.service.LibraryCardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

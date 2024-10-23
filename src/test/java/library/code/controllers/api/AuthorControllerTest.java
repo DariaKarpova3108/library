@@ -1,9 +1,9 @@
 package library.code.controllers.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import library.code.dto.AuthorDTO.AuthorCreateDTO;
-import library.code.dto.AuthorDTO.AuthorDTO;
-import library.code.dto.AuthorDTO.AuthorUpdateDTO;
+import library.code.dto.authorDTO.AuthorCreateDTO;
+import library.code.dto.authorDTO.AuthorDTO;
+import library.code.dto.authorDTO.AuthorUpdateDTO;
 import library.code.models.Author;
 import library.code.repositories.AuthorRepository;
 import library.code.util.ModelGenerator;

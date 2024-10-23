@@ -1,9 +1,9 @@
 package library.code.controllers.api;
 
 import jakarta.validation.Valid;
-import library.code.dto.BookDTO.BookCreateDTO;
-import library.code.dto.BookDTO.BookDTO;
-import library.code.dto.BookDTO.BookUpdateDTO;
+import library.code.dto.bookDTO.BookCreateDTO;
+import library.code.dto.bookDTO.BookDTO;
+import library.code.dto.bookDTO.BookUpdateDTO;
 import library.code.dto.specificationDTO.BookParamDTO;
 import library.code.service.BookService;
 import lombok.RequiredArgsConstructor;

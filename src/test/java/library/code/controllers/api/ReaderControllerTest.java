@@ -1,8 +1,8 @@
 package library.code.controllers.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import library.code.dto.ReaderDTO.ReaderCreateDTO;
-import library.code.dto.ReaderDTO.ReaderUpdateDTO;
+import library.code.dto.readerDTO.ReaderCreateDTO;
+import library.code.dto.readerDTO.ReaderUpdateDTO;
 import library.code.models.Reader;
 import library.code.models.Role;
 import library.code.models.RoleName;

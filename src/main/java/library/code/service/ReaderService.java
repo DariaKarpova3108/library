@@ -1,9 +1,9 @@
 package library.code.service;
 
-import library.code.dto.LibraryCardDTO.LibraryCardDTO;
-import library.code.dto.ReaderDTO.ReaderCreateDTO;
-import library.code.dto.ReaderDTO.ReaderDTO;
-import library.code.dto.ReaderDTO.ReaderUpdateDTO;
+import library.code.dto.libraryCardDTO.LibraryCardDTO;
+import library.code.dto.readerDTO.ReaderCreateDTO;
+import library.code.dto.readerDTO.ReaderDTO;
+import library.code.dto.readerDTO.ReaderUpdateDTO;
 import library.code.dto.specificationDTO.ReaderParamDTO;
 import library.code.exception.ResourceNotFoundException;
 import library.code.mapper.LibraryCardMapper;

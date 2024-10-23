@@ -1,7 +1,7 @@
 package library.code.controllers.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import library.code.dto.LibraryCardDTO.LibraryCardUpdateDTO;
+import library.code.dto.libraryCardDTO.LibraryCardUpdateDTO;
 import library.code.models.LibraryCard;
 import library.code.models.RoleName;
 import library.code.models.User;

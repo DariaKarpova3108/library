@@ -1,9 +1,9 @@
 package library.code.controllers.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import library.code.dto.LibraryCardBooksDTO.LibraryCardBookCreateDTO;
-import library.code.dto.LibraryCardBooksDTO.LibraryCardBookDTO;
-import library.code.dto.LibraryCardBooksDTO.LibraryCardBookUpdateDTO;
+import library.code.dto.libraryCardBooksDTO.LibraryCardBookCreateDTO;
+import library.code.dto.libraryCardBooksDTO.LibraryCardBookDTO;
+import library.code.dto.libraryCardBooksDTO.LibraryCardBookUpdateDTO;
 import library.code.models.Author;
 import library.code.models.Book;
 import library.code.models.Genre;

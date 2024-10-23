@@ -1,8 +1,8 @@
 package library.code.mapper;
 
-import library.code.dto.BookDTO.BookCreateDTO;
-import library.code.dto.BookDTO.BookDTO;
-import library.code.dto.BookDTO.BookUpdateDTO;
+import library.code.dto.bookDTO.BookCreateDTO;
+import library.code.dto.bookDTO.BookDTO;
+import library.code.dto.bookDTO.BookUpdateDTO;
 import library.code.exception.ResourceNotFoundException;
 import library.code.models.Author;
 import library.code.models.Book;

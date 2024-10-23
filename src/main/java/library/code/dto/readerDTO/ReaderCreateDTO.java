@@ -1,4 +1,4 @@
-package library.code.dto.ReaderDTO;
+package library.code.dto.readerDTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;

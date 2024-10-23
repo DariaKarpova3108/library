@@ -1,8 +1,8 @@
-package library.code.dto.LibraryCardDTO;
+package library.code.dto.libraryCardDTO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import library.code.dto.LibraryCardBooksDTO.LibraryCardBookDTO;
+import library.code.dto.libraryCardBooksDTO.LibraryCardBookDTO;
 import lombok.Getter;
 import lombok.Setter;
 

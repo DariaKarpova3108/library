@@ -1,8 +1,8 @@
 package library.code.mapper;
 
-import library.code.dto.ReaderDTO.ReaderCreateDTO;
-import library.code.dto.ReaderDTO.ReaderDTO;
-import library.code.dto.ReaderDTO.ReaderUpdateDTO;
+import library.code.dto.readerDTO.ReaderCreateDTO;
+import library.code.dto.readerDTO.ReaderDTO;
+import library.code.dto.readerDTO.ReaderUpdateDTO;
 import library.code.models.Reader;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

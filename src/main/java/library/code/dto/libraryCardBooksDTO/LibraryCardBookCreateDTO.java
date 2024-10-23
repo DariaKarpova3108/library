@@ -1,4 +1,4 @@
-package library.code.dto.LibraryCardBooksDTO;
+package library.code.dto.libraryCardBooksDTO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

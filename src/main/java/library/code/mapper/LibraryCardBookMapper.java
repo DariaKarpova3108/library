@@ -1,8 +1,8 @@
 package library.code.mapper;
 
-import library.code.dto.LibraryCardBooksDTO.LibraryCardBookCreateDTO;
-import library.code.dto.LibraryCardBooksDTO.LibraryCardBookDTO;
-import library.code.dto.LibraryCardBooksDTO.LibraryCardBookUpdateDTO;
+import library.code.dto.libraryCardBooksDTO.LibraryCardBookCreateDTO;
+import library.code.dto.libraryCardBooksDTO.LibraryCardBookDTO;
+import library.code.dto.libraryCardBooksDTO.LibraryCardBookUpdateDTO;
 import library.code.exception.ResourceNotFoundException;
 import library.code.models.Book;
 import library.code.models.LibraryCard;

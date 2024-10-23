@@ -1,4 +1,4 @@
-package library.code.dto.AuthorDTO;
+package library.code.dto.authorDTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
