@@ -9,7 +9,6 @@ spring:
       enabled: always
   profiles:
     active: ${SPRING_PROFILES_ACTIVE}
-#    active: dev
 
 springdoc:
   swagger-ui:
