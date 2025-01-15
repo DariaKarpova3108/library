@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.ActiveProfiles;
@@ -100,14 +99,13 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = {"ADMIN", "READER"})
     public void testCreateUser() throws Exception {
         var createDTO = new UserCreateDTO();
 
         createDTO.setEmail("testUser@test.com");
         createDTO.setPassword("123");
 
-        var request = post("/api/users")
+        var request = post("/api/users/registration")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(createDTO));
 

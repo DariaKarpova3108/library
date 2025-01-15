@@ -7,11 +7,13 @@ import library.code.models.User;
 import library.code.repositories.RoleRepository;
 import library.code.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class DataInitializer {
 
     private final RoleRepository roleRepository;
@@ -24,15 +26,18 @@ public class DataInitializer {
             roleRepository.findByRoleName(roleName).orElseGet(() -> {
                 Role role = new Role();
                 role.setRoleName(roleName);
-                System.out.println("Creating role: " + roleName);
+                log.info("Creating role: {}", roleName);
                 return roleRepository.save(role);
             });
         }
 
         var roleAdmin = roleRepository.findByRoleName(RoleName.ADMIN)
-                .orElseThrow(() -> new RuntimeException("Role ADMIN not found"));
+                .orElseThrow(() -> {
+                    log.error("Role ADMIN not found");
+                    return new RuntimeException("Role ADMIN not found");
+                });
         if (!userRepository.existsByEmail("admin@admin.library")) {
-            System.out.println("Creating admin user...");
+            log.info("Creating admin user...");
             User user = new User();
             user.setRole(roleAdmin);
             user.setEmail("admin@admin.library");

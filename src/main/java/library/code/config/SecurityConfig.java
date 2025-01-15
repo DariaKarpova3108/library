@@ -41,6 +41,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/api/login/**", "/welcome").permitAll()
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/login/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/users/registration").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -70,7 +71,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity httpSecurity) throws Exception {
         AuthenticationManagerBuilder auth = httpSecurity.getSharedObject(AuthenticationManagerBuilder.class);
-        auth.authenticationProvider(daoAuthProvider(auth)); // добавляем ваш AuthenticationProvider
+        auth.authenticationProvider(daoAuthProvider(auth));
         return auth.build();
     }
 

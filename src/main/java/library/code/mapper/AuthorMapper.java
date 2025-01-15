@@ -24,5 +24,4 @@ public abstract class AuthorMapper {
     public abstract AuthorDTO map(Author author);
 
     public abstract void update(AuthorUpdateDTO updateDTO, @MappingTarget Author author);
-
 }

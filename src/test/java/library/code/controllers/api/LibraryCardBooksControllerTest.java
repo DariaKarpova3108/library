@@ -148,7 +148,8 @@ public class LibraryCardBooksControllerTest {
     @Test
     @WithMockUser(roles = {"ADMIN"})
     public void getListLibraryBooks() throws Exception {
-        var request = get("/api/libraryCardBooks");
+        var request = get("/api/" + libraryCard.getId() + "/libraryCardBooks");
+
         var result = mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andReturn();
@@ -162,7 +163,7 @@ public class LibraryCardBooksControllerTest {
     @Test
     @WithMockUser(roles = {"ADMIN"})
     public void getLibraryBooks() throws Exception {
-        var request = get("/api/libraryCardBooks/" + libraryCardBooks.getId());
+        var request = get("/api/" + libraryCard.getId() + "/libraryCardBooks/" + libraryCardBooks.getId());
         var result = mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andReturn();
@@ -184,7 +185,7 @@ public class LibraryCardBooksControllerTest {
         createDTO.setLibraryCardNumber(libraryCard.getCardNumber());
         createDTO.setBorrowDate(LocalDate.now());
         createDTO.setExpectedReturn(LocalDate.now().plusWeeks(4));
-        var request = post("/api/libraryCardBooks")
+        var request = post("/api/" + libraryCard.getId() + "/libraryCardBooks")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(createDTO));
         var result = mockMvc.perform(request)
@@ -208,7 +209,7 @@ public class LibraryCardBooksControllerTest {
         var expectedReturn = LocalDate.now().plusMonths(2);
         updateDTO.setExpectedReturn(JsonNullable.of(expectedReturn));
 
-        var request = put("/api/libraryCardBooks/" + libraryCardBooks.getId())
+        var request = put("/api/" + libraryCard.getId() + "/libraryCardBooks/" + libraryCardBooks.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(updateDTO));
 
@@ -228,7 +229,7 @@ public class LibraryCardBooksControllerTest {
     @Test
     @WithMockUser(roles = {"ADMIN"})
     public void deleteLibraryBooks() throws Exception {
-        var request = delete("/api/libraryCardBooks/" + libraryCardBooks.getId());
+        var request = delete("/api/" + libraryCard.getId() + "/libraryCardBooks/" + libraryCardBooks.getId());
 
         mockMvc.perform(request)
                 .andExpect(status().isNoContent());

@@ -1,11 +1,14 @@
 package library.code.controllers.api;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import library.code.dto.administatorDTO.AdminCreateDTO;
 import library.code.dto.administatorDTO.AdminUpdateDTO;
 import library.code.dto.administatorDTO.AdministratorDTO;
 import library.code.service.AdministratorService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,45 +27,78 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/administrations")
 @RequiredArgsConstructor
+@Slf4j
+@Tag(name = "Контроллер управления администраторами",
+        description = "Позволяет проводить CRUD операции с администраторами")
 public class AdministratorController {
 
     private final AdministratorService administratorService;
 
+    @Operation(summary = "Получить всех администраторов",
+            description = "Возвращает список всех администраторов. "
+                    + "Доступно только пользователям с ролью ADMIN")
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<AdministratorDTO>> getAllAdmins() {
+        log.info("Request to get all administrators received");
+        var admins = administratorService.getAllAdmin();
+        log.info("Successfully retrieved {} administrators", admins.size());
         return ResponseEntity.ok()
-                .header("X-Total_count", String.valueOf(administratorService.getAllAdmin().size()))
-                .body(administratorService.getAllAdmin());
+                .header("X-Total_count", String.valueOf(admins.size()))
+                .body(admins);
     }
 
+
+    @Operation(summary = "Получить администратора по ID",
+            description = "Возвращает подробную информацию об администраторе по его ID. "
+                    + "Доступно только пользователям с ролью ADMIN")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
     public AdministratorDTO getAdmin(@PathVariable Long id) {
-        return administratorService.getAdmin(id);
+        log.info("Request to get administrator with ID: {}", id);
+        var admin = administratorService.getAdmin(id);
+        log.info("Successfully retrieved administrator with ID: {}", id);
+        return admin;
     }
 
+    @Operation(summary = "Заполнение профиля администратора",
+            description = "Заполняет профиль администратора для пользователя с указанным ID. "
+                    + "Доступно только пользователям с ролью ADMIN")
     @PostMapping("/{userId}")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
     public AdministratorDTO completeAdminProfile(@PathVariable Long userId,
                                                  @RequestBody @Valid AdminCreateDTO createDTO) {
-        return administratorService.completeAdminProfile(userId, createDTO);
+        log.info("Request to complete admin profile for user with ID: {}", userId);
+        var adminProfile = administratorService.completeAdminProfile(userId, createDTO);
+        log.info("Successfully completed profile for user with ID: {}", userId);
+        return adminProfile;
     }
 
+    @Operation(summary = "Обновить информацию о администраторе",
+            description = "Обновляет информацию об администраторе по его ID. "
+                    + "Доступно только пользователю с ролью ADMIN и пользователю чей ID совпадает с запрашиваемым")
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') and @adminUtils.checkCurrentAdmin(#id)")
     public AdministratorDTO updateAdmin(@PathVariable Long id,
                                         @RequestBody @Valid AdminUpdateDTO updateDTO) {
-        return administratorService.updateAdmin(updateDTO, id);
+        log.info("Request to update administrator with ID: {}", id);
+        var adminUpdate = administratorService.updateAdmin(updateDTO, id);
+        log.info("Successfully updated administrator with ID: {}", id);
+        return adminUpdate;
     }
 
+    @Operation(summary = "Удалить администратора",
+    description = "Удаляет администратора по его ID. "
+            + "Доступно только пользователям с ролью ADMIN и пользователю чей ID совпадает с запрашиваемым")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') and @adminUtils.checkCurrentAdmin(#id)")
     public void deleteAdmin(@PathVariable Long id) {
+        log.info("Request to delete administrator with ID: {}", id);
         administratorService.deleteAdmin(id);
+        log.info("Successfully deleted administrator with ID: {}", id);
     }
 }

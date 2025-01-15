@@ -1,25 +1,47 @@
 package library.code.specification;
 
 import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Order;
 import jakarta.persistence.criteria.Root;
 import jakarta.persistence.criteria.Subquery;
 import library.code.dto.specificationDTO.BookParamDTO;
 import library.code.models.Book;
 import library.code.models.Genre;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class BookSpecification {
-    public Specification<Book> build(BookParamDTO params) {
-        return withBookTitleCont(params.getBookCont())
-                .and(withContAuthorFirstName(params.getAuthorFirstNameCont()))
-                .and(withContAuthorLastName(params.getAuthorSurnameCont()))
-                .and(withPublisherTitleCont(params.getPublisherTitleCont()))
-                .and(withContGenreTypes(params.getGenreTypes()))
-                .and(withDirectionOfLiterature(params.getDirectionOfLiterature()));
+    public Specification<Book> build(BookParamDTO params, Sort sort) {
+        Specification<Book> specification = Specification.where(null);
+
+        specification = specification
+                .and(withBookTitleCont(params.getBookCont())
+                        .and(withContAuthorFirstName(params.getAuthorFirstNameCont()))
+                        .and(withContAuthorLastName(params.getAuthorSurnameCont()))
+                        .and(withPublisherTitleCont(params.getPublisherTitleCont()))
+                        .and(withContGenreTypes(params.getGenreTypes()))
+                        .and(withDirectionOfLiterature(params.getDirectionOfLiterature())));
+
+        if (sort != null && !sort.isEmpty()) {
+            final Specification<Book> finalSpecification = specification;
+            return ((root, query, criteriaBuilder) -> {
+                List<Order> orders = sort.stream()
+                        .map(order -> order.isAscending()
+                                ? criteriaBuilder.asc(root.get(order.getProperty()))
+                                : criteriaBuilder.desc(root.get(order.getProperty())))
+                        .collect(Collectors.toList());
+                assert query != null;
+                query.orderBy(orders);
+                return finalSpecification.toPredicate(root, query, criteriaBuilder);
+            });
+        }
+        return specification;
     }
 
     private Specification<Book> withBookTitleCont(String bookTitleCont) {

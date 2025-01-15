@@ -136,7 +136,7 @@ public class AdministratorControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = {"ADMIN"})
+    @WithMockUser(roles = {"ADMIN"}, username = "user@admin.library")
     public void testUpdateAdmin() throws Exception {
         var updateDTO = new AdminUpdateDTO();
         updateDTO.setJobTitle(JsonNullable.of("newJobTitle"));
@@ -158,7 +158,7 @@ public class AdministratorControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = {"ADMIN"})
+    @WithMockUser(roles = {"ADMIN"}, username = "user@admin.library")
     public void testDeleteAdmin() throws Exception {
         var request = delete("/api/administrations/" + admin.getId());
         mockMvc.perform(request)

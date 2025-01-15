@@ -1,7 +1,7 @@
 package library.code.unil;
 
 import library.code.exception.ResourceNotFoundException;
-import library.code.repositories.ReaderRepository;
+import library.code.repositories.AdministratorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -11,12 +11,11 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class ReaderUtils {
+public class AdminUtils {
+    private final AdministratorRepository administratorRepository;
 
-    private final ReaderRepository readerRepository;
-
-    public boolean checkCurrentReader(Long id) {
-        log.info("Starting check for reader with ID: {}", id);
+    public boolean checkCurrentAdmin(Long id) {
+        log.info("Starting check for admin with ID: {}", id);
 
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -27,20 +26,20 @@ public class ReaderUtils {
         var email = authentication.getName();
         log.debug("Authenticated user email: {}", email);
 
-        var currentReader = readerRepository.findById(id)
+        var admin = administratorRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.error("Reader with ID: {} not found", id);
-                    return new ResourceNotFoundException("Reader with id: " + id + " not found");
+                    log.error("Admin with ID: {} not found", id);
+                    return new ResourceNotFoundException("Admin with ID: " + id + " not found");
                 });
 
-        boolean isReader = currentReader.getUser().getEmail().equals(email);
+        boolean isAdmin = admin.getUser().getEmail().equals(email);
 
-        if (isReader) {
-            log.info("User with email: {} is a valid reader with ID: {}", email, id);
+        if (isAdmin) {
+            log.info("User with email: {} is a valid admin with ID: {}", email, id);
         } else {
-            log.warn("User with email: {} does not match reader with ID: {}", email, id);
+            log.warn("User with email: {} does not match admin with ID: {}", email, id);
         }
 
-        return isReader;
+        return isAdmin;
     }
 }

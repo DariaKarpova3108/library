@@ -7,8 +7,8 @@ import library.code.exception.ResourceNotFoundException;
 import library.code.mapper.LibraryCardBookMapper;
 import library.code.models.LibraryCardBooks;
 import library.code.repositories.LibraryCardBooksRepository;
-import library.code.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -17,50 +17,91 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class LibraryCardBooksService {
     private final LibraryCardBooksRepository cardBooksRepository;
     private final LibraryCardBookMapper cardBookMapper;
 
-    private final UserRepository userRepository;
-
-    public List<LibraryCardBookDTO> getAllCardBooks() {
-        return cardBooksRepository.findAll().stream()
+    public List<LibraryCardBookDTO> getAllBooksInCardBooks(Long libraryCardId) {
+        log.info("Fetching all books in library card books");
+        var borrowedBooks = cardBooksRepository.findByLibraryCardId(libraryCardId).stream()
                 .map(cardBookMapper::map)
                 .collect(Collectors.toList());
+
+        log.info("Successfully fetched {} all books in library card books", borrowedBooks.size());
+        return borrowedBooks;
     }
 
-    public LibraryCardBookDTO getCardBooks(Long id) {
+    public LibraryCardBookDTO getBooksInCardBooks(Long id) {
+        log.info("Fetching the book in library card book with ID: {}", id);
+
         var cardBooks = cardBooksRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Library card with books with id: "
-                        + id + " not found"));
+                .orElseThrow(() -> {
+                    log.error("The book in library card book with ID: {} not found", id);
+                    return new ResourceNotFoundException("The book with ID: "
+                            + id + "in library card not found");
+                });
+
+        log.info("Successfully fetched the book with ID: {} from library card", id);
         return cardBookMapper.map(cardBooks);
     }
 
 
-    public LibraryCardBookDTO createCardBooks(LibraryCardBookCreateDTO createDTO) {
+    public LibraryCardBookDTO createNewRecordInCardBooks(LibraryCardBookCreateDTO createDTO) {
+        log.info("Creating a new record about book in a library data card: {}", createDTO);
         var cardBooks = cardBookMapper.map(createDTO);
         cardBooksRepository.save(cardBooks);
+
         LocalDate expectedReturnDate = cardBooks.getBorrowDate().plusWeeks(4);
         cardBooks.setExpectedReturn(expectedReturnDate);
+
+        log.info("The record library card was successfully created with an expected return date: {}",
+                expectedReturnDate);
         return cardBookMapper.map(cardBooks);
     }
 
-    public LibraryCardBookDTO updateCardBooks(LibraryCardBookUpdateDTO updateDTO, Long id) {
+    public LibraryCardBookDTO updateRecordInCardBooks(LibraryCardBookUpdateDTO updateDTO, Long id) {
+        log.info("Attempting to update the record about book in library card book with ID: {}", id);
+
         var cardBooks = cardBooksRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Library card with books with id: "
-                        + id + " not found"));
+                .orElseThrow(() -> {
+                    log.error("The book in library card book with ID: {} not found for update", id);
+                    return new ResourceNotFoundException("Library card with books with ID: "
+                            + id + " not found");
+                });
+
         cardBookMapper.update(updateDTO, cardBooks);
         cardBooksRepository.save(cardBooks);
+
+        log.info("Successfully updated the record in library card book with ID: {}", id);
         return cardBookMapper.map(cardBooks);
     }
 
-    public void deleteCardBooks(Long id) {
+    public void deleteBookFromCardBooks(Long id) {
+        log.info("Attempting to delete the record about book in library card book with ID: {}", id);
         cardBooksRepository.deleteById(id);
+        log.info("Successfully deleted the record in library card book with ID: {}", id);
     }
 
     public boolean isReaderOwnerOfBook(Long libraryCardBookId, Long readerId) {
+        log.info("Checking if reader with ID: {} is owner of library card book with ID: {}",
+                readerId, libraryCardBookId);
+
         LibraryCardBooks cardBooks = cardBooksRepository.findById(libraryCardBookId)
-                .orElseThrow(() -> new ResourceNotFoundException("Library card with books not found"));
-        return cardBooks.getLibraryCard().getReader().getId().equals(readerId);
+                .orElseThrow(() -> {
+                    log.error("Library card book with ID: {} not found", libraryCardBookId);
+                    return new ResourceNotFoundException("Library card with books not found");
+                });
+        boolean isOwner = cardBooks.getLibraryCard().getReader().getId().equals(readerId);
+
+        if (isOwner) {
+            log.info("Reader with ID: {} is the owner of library card book with ID: {}",
+                    readerId, libraryCardBookId);
+        } else {
+            log.warn("Reader with ID: {} is NOT the owner of library card book with ID: {}",
+                    readerId, libraryCardBookId);
+        }
+
+        return isOwner;
     }
 }

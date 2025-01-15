@@ -16,7 +16,7 @@ springdoc:
 
 logging:
   level:
-    org.springframework.security: trace
+    org.springframework.security: info
 
 rsa:
   private-key: classpath:certs/private.pem
