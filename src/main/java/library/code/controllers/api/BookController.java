@@ -1,6 +1,7 @@
 package library.code.controllers.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import library.code.dto.bookDTO.BookCreateDTO;
@@ -40,6 +41,7 @@ public class BookController {
             summary = "Получение списка книг",
             description = "Возвращает список книг с возможностью фильтрации, пагинации и сортировки"
     )
+    @SecurityRequirement(name = "JWT")
     @GetMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('READER')")
     public ResponseEntity<List<BookDTO>> getListBooks(BookParamDTO params,
@@ -58,6 +60,7 @@ public class BookController {
             summary = "Получение книги по ID",
             description = "Возвращает информацию о книге по её уникальному идентификатору"
     )
+    @SecurityRequirement(name = "JWT")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN') or hasRole('READER')")
@@ -72,6 +75,7 @@ public class BookController {
             summary = "Создание новой книги",
             description = "Создаёт новую книгу на основе переданных данных"
     )
+    @SecurityRequirement(name = "JWT")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
@@ -86,6 +90,7 @@ public class BookController {
             summary = "Обновление книги",
             description = "Обновляет информацию о книге по её уникальному идентификатору"
     )
+    @SecurityRequirement(name = "JWT")
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
@@ -100,6 +105,7 @@ public class BookController {
             summary = "Удаление книги",
             description = "Удаляет книгу по её уникальному идентификатору"
     )
+    @SecurityRequirement(name = "JWT")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ADMIN')")

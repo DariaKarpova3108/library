@@ -1,6 +1,7 @@
 package library.code.controllers.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import library.code.dto.administatorDTO.AdminCreateDTO;
@@ -37,6 +38,7 @@ public class AdministratorController {
     @Operation(summary = "Получить всех администраторов",
             description = "Возвращает список всех администраторов. "
                     + "Доступно только пользователям с ролью ADMIN")
+    @SecurityRequirement(name = "JWT")
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<AdministratorDTO>> getAllAdmins() {
@@ -52,6 +54,7 @@ public class AdministratorController {
     @Operation(summary = "Получить администратора по ID",
             description = "Возвращает подробную информацию об администраторе по его ID. "
                     + "Доступно только пользователям с ролью ADMIN")
+    @SecurityRequirement(name = "JWT")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
@@ -65,6 +68,7 @@ public class AdministratorController {
     @Operation(summary = "Заполнение профиля администратора",
             description = "Заполняет профиль администратора для пользователя с указанным ID. "
                     + "Доступно только пользователям с ролью ADMIN")
+    @SecurityRequirement(name = "JWT")
     @PostMapping("/{userId}")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
@@ -79,6 +83,7 @@ public class AdministratorController {
     @Operation(summary = "Обновить информацию о администраторе",
             description = "Обновляет информацию об администраторе по его ID. "
                     + "Доступно только пользователю с ролью ADMIN и пользователю чей ID совпадает с запрашиваемым")
+    @SecurityRequirement(name = "JWT")
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN') and @adminUtils.checkCurrentAdmin(#id)")
@@ -91,8 +96,9 @@ public class AdministratorController {
     }
 
     @Operation(summary = "Удалить администратора",
-    description = "Удаляет администратора по его ID. "
-            + "Доступно только пользователям с ролью ADMIN и пользователю чей ID совпадает с запрашиваемым")
+            description = "Удаляет администратора по его ID. "
+                    + "Доступно только пользователям с ролью ADMIN и пользователю чей ID совпадает с запрашиваемым")
+    @SecurityRequirement(name = "JWT")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ADMIN') and @adminUtils.checkCurrentAdmin(#id)")

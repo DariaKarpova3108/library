@@ -1,6 +1,7 @@
 package library.code.controllers.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import library.code.dto.libraryCardDTO.LibraryCardDTO;
@@ -36,6 +37,7 @@ public class LibraryCardController {
             summary = "Получение списка всех читательских билетов",
             description = "Возвращает список всех читательских билетов. Доступно только для пользователей с ролью ADMIN"
     )
+    @SecurityRequirement(name = "JWT")
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<LibraryCardDTO>> getListLibraryCards() {
@@ -54,6 +56,7 @@ public class LibraryCardController {
             description = "Возвращает информацию о конкретном читательском билете по его уникальному идентификатору. "
                     + "Доступно только для пользователей с ролью ADMIN"
     )
+    @SecurityRequirement(name = "JWT")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
@@ -69,6 +72,7 @@ public class LibraryCardController {
             description = "Позволяет обновить данные о читательском билете по его уникальному идентификатору. "
                     + "Доступно только для пользователей с ролью ADMIN"
     )
+    @SecurityRequirement(name = "JWT")
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
@@ -84,6 +88,7 @@ public class LibraryCardController {
             description = "Позволяет удалить читательский билет по его уникальному идентификатору. "
                     + "Доступно только для пользователей с ролью ADMIN"
     )
+    @SecurityRequirement(name = "JWT")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ADMIN')")

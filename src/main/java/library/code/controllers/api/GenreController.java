@@ -1,6 +1,7 @@
 package library.code.controllers.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import library.code.dto.genreDTO.GenreCreateDTO;
@@ -38,6 +39,7 @@ public class GenreController {
             summary = "Получение списка жанров",
             description = "Возвращает список всех жанров с возможностью пагинации и сортировки"
     )
+    @SecurityRequirement(name = "JWT")
     @GetMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('READER')")
     public ResponseEntity<List<GenreDTO>> getListGenres() {
@@ -53,6 +55,7 @@ public class GenreController {
             summary = "Получение жанра по ID",
             description = "Возвращает информацию о жанре по его уникальному идентификатору"
     )
+    @SecurityRequirement(name = "JWT")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN') or hasRole('READER')")
@@ -67,6 +70,7 @@ public class GenreController {
             summary = "Создание нового жанра",
             description = "Создаёт новый жанр на основе переданных данных"
     )
+    @SecurityRequirement(name = "JWT")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
@@ -82,6 +86,7 @@ public class GenreController {
             summary = "Обновление жанра",
             description = "Обновляет информацию о жанре по его уникальному идентификатору"
     )
+    @SecurityRequirement(name = "JWT")
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
@@ -97,6 +102,7 @@ public class GenreController {
             summary = "Удаление жанра",
             description = "Удаляет жанр по его уникальному идентификатору"
     )
+    @SecurityRequirement(name = "JWT")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ADMIN')")

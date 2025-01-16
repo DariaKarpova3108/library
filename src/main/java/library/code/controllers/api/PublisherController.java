@@ -1,6 +1,7 @@
 package library.code.controllers.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import library.code.dto.publisherDTO.PublisherCreateDTO;
@@ -39,6 +40,7 @@ public class PublisherController {
             summary = "Получение списка всех издательств",
             description = "Возвращает список всех издательств. Доступно для пользователей с ролью ADMIN или READER"
     )
+    @SecurityRequirement(name = "JWT")
     @GetMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('READER')")
     public ResponseEntity<List<PublisherDTO>> getListPublishers() {
@@ -57,6 +59,7 @@ public class PublisherController {
             description = "Возвращает информацию о конкретном издательстве по его уникальному идентификатору. "
                     + "Доступно для пользователей с ролью ADMIN или READER"
     )
+    @SecurityRequirement(name = "JWT")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN') or hasRole('READER')")
@@ -71,6 +74,7 @@ public class PublisherController {
             summary = "Создание нового издательства",
             description = "Позволяет создать нового издателя. Доступно только для пользователей с ролью ADMIN"
     )
+    @SecurityRequirement(name = "JWT")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
@@ -86,6 +90,7 @@ public class PublisherController {
             description = "Позволяет обновить данные об издателе по его уникальному идентификатору. "
                     + "Доступно только для пользователей с ролью ADMIN"
     )
+    @SecurityRequirement(name = "JWT")
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
@@ -101,6 +106,7 @@ public class PublisherController {
             description = "Позволяет удалить издателя по его уникальному идентификатору. "
                     + "Доступно только для пользователей с ролью ADMIN"
     )
+    @SecurityRequirement(name = "JWT")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)

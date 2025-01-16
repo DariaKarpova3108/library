@@ -1,6 +1,7 @@
 package library.code.controllers.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import library.code.dto.libraryCardBooksDTO.LibraryCardBookCreateDTO;
@@ -40,6 +41,7 @@ public class LibraryCardBooksController {
                     + "Доступно только для пользователей с ролью ADMIN или "
                     + "читателю, которому принадлежит читательский билет"
     )
+    @SecurityRequirement(name = "JWT")
     @GetMapping
     @PreAuthorize("hasRole('ADMIN') or (hasRole('READER') "
             + "and @libraryCardBooksService.isReaderOwnerOfBook(#id, authentication.principal.id))")
@@ -61,6 +63,7 @@ public class LibraryCardBooksController {
                     + "по её уникальному идентификатору. Доступно пользователям с ролью ADMIN или "
                     + "читателю, которому принадлежит читательский билет"
     )
+    @SecurityRequirement(name = "JWT")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN') or (hasRole('READER') "
@@ -77,6 +80,7 @@ public class LibraryCardBooksController {
             description = "Создаёт новую запись о книге в читательском билете. "
                     + "Доступно только для пользователей с ролью ADMIN"
     )
+    @SecurityRequirement(name = "JWT")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
@@ -109,6 +113,7 @@ public class LibraryCardBooksController {
             description = "Удаляет запись о книге из читательского билета по её уникальному идентификатору. "
                     + "Доступно только для пользователей с ролью ADMIN"
     )
+    @SecurityRequirement(name = "JWT")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ADMIN')")

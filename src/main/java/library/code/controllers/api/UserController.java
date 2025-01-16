@@ -1,6 +1,7 @@
 package library.code.controllers.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import library.code.dto.userDTO.UserCreateDTO;
@@ -52,6 +53,7 @@ public class UserController {
             description = "Возвращает информацию о пользователе по его уникальному идентификатору. "
                     + "Доступно для пользователей с ролью ADMIN или для самого пользователя"
     )
+    @SecurityRequirement(name = "JWT")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN') or @userUtils.checkCurrentUser(#id)")
@@ -67,6 +69,7 @@ public class UserController {
             description = "Позволяет обновить данные пользователя по его уникальному идентификатору. "
                     + "Доступно для пользователей с ролью ADMIN или для самого пользователя"
     )
+    @SecurityRequirement(name = "JWT")
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN') or @userUtils.checkCurrentUser(#id)")
@@ -82,6 +85,7 @@ public class UserController {
             description = "Позволяет удалить пользователя по его уникальному идентификатору. "
                     + "Доступно для пользователей с ролью ADMIN или для самого пользователя"
     )
+    @SecurityRequirement(name = "JWT")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ADMIN') or @userUtils.checkCurrentUser(#id)")

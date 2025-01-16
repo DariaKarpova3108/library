@@ -1,6 +1,7 @@
 package library.code.controllers.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import library.code.dto.authorDTO.AuthorCreateDTO;
@@ -36,11 +37,11 @@ public class AuthorController {
 
     private final AuthorService authorService;
 
-
     @Operation(
             summary = "Получение списка авторов",
             description = "Возвращает список авторов с возможностью фильтрации, пагинации и сортировки"
     )
+    @SecurityRequirement(name = "JWT")
     @GetMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('READER')")
     public ResponseEntity<List<AuthorDTO>> getListAuthors(AuthorParamDTO params,
@@ -60,6 +61,7 @@ public class AuthorController {
             summary = "Получение информации об авторе",
             description = "Возвращает информацию об авторе по его уникальному идентификатору"
     )
+    @SecurityRequirement(name = "JWT")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN') or hasRole('READER')")
@@ -74,6 +76,7 @@ public class AuthorController {
             summary = "Создание нового автора",
             description = "Создаёт нового автора в системе"
     )
+    @SecurityRequirement(name = "JWT")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
@@ -88,6 +91,7 @@ public class AuthorController {
             summary = "Обновление информации об авторе",
             description = "Обновляет данные об авторе по его уникальному идентификатору"
     )
+    @SecurityRequirement(name = "JWT")
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
@@ -102,6 +106,7 @@ public class AuthorController {
             summary = "Удаление автора",
             description = "Удаляет автора по его уникальному идентификатору"
     )
+    @SecurityRequirement(name = "JWT")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ADMIN')")

@@ -1,6 +1,7 @@
 package library.code.controllers.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import library.code.dto.libraryCardDTO.LibraryCardDTO;
@@ -43,6 +44,7 @@ public class ReaderController {
             description = "Возвращает список всех профилей читателей с параметрами сортировки и пагинации. "
                     + "Доступно только для пользователей с ролью ADMIN"
     )
+    @SecurityRequirement(name = "JWT")
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ReaderDTO>> getListReadersProfiles(ReaderParamDTO params,
@@ -63,6 +65,7 @@ public class ReaderController {
             description = "Возвращает информацию о конкретном профиле читателя по его уникальному идентификатору. "
                     + "Доступно для пользователей с ролью ADMIN или для самого читателя"
     )
+    @SecurityRequirement(name = "JWT")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN') or @readerUtils.checkCurrentReader(#id)")
@@ -78,6 +81,7 @@ public class ReaderController {
             description = "Возвращает информацию о читательском билете для указанного читателя. "
                     + "Доступно для пользователей с ролью ADMIN или для самого читателя"
     )
+    @SecurityRequirement(name = "JWT")
     @GetMapping("/{readerId}/libraryCard")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN') or @readerUtils.checkCurrentReader(#readerId)")
@@ -93,6 +97,7 @@ public class ReaderController {
             description = "Позволяет завершить заполнение профиля читателя для пользователя с указанным ID."
                     + " Доступно для пользователя с ролью ADMIN или для самого читателя"
     )
+    @SecurityRequirement(name = "JWT")
     @PostMapping("/{userId}")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN') or @userUtils.checkCurrentUser(#userId)")
@@ -108,6 +113,7 @@ public class ReaderController {
             description = "Позволяет обновить профиль читателя по его уникальному идентификатору. "
                     + "Доступно для пользователей с ролью ADMIN или для самого читателя"
     )
+    @SecurityRequirement(name = "JWT")
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN') or @readerUtils.checkCurrentReader(#id)")
@@ -124,6 +130,7 @@ public class ReaderController {
             description = "Позволяет удалить профиль читателя по его уникальному идентификатору. "
                     + "Доступно для пользователей с ролью ADMIN или для самого читателя"
     )
+    @SecurityRequirement(name = "JWT")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ADMIN') or @readerUtils.checkCurrentReader(#id)")
