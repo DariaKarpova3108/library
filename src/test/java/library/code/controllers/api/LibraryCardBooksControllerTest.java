@@ -4,11 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import library.code.dto.libraryCardBooksDTO.LibraryCardBookCreateDTO;
 import library.code.dto.libraryCardBooksDTO.LibraryCardBookDTO;
 import library.code.dto.libraryCardBooksDTO.LibraryCardBookUpdateDTO;
+import library.code.exception.ResourceNotFoundException;
 import library.code.models.Author;
 import library.code.models.Book;
 import library.code.models.Genre;
 import library.code.models.LibraryCard;
 import library.code.models.LibraryCardBooks;
+import library.code.models.NotificationStatus;
+import library.code.models.NotificationStatusName;
 import library.code.models.Publisher;
 import library.code.models.Reader;
 import library.code.models.Role;
@@ -19,6 +22,7 @@ import library.code.repositories.BookRepository;
 import library.code.repositories.GenreRepository;
 import library.code.repositories.LibraryCardBooksRepository;
 import library.code.repositories.LibraryCardRepository;
+import library.code.repositories.NotificationStatusRepository;
 import library.code.repositories.PublisherRepository;
 import library.code.repositories.ReaderRepository;
 import library.code.repositories.RoleRepository;
@@ -82,6 +86,8 @@ public class LibraryCardBooksControllerTest {
     @Autowired
     private GenreRepository genreRepository;
     @Autowired
+    private NotificationStatusRepository notificationStatusRepository;
+    @Autowired
     private ReaderRepository readerRepository;
     @Autowired
     private UserRepository userRepository;
@@ -91,6 +97,7 @@ public class LibraryCardBooksControllerTest {
     private LibraryCard libraryCard;
     private LibraryCardBooks libraryCardBooks;
     private User user;
+    private NotificationStatus notificationStatus;
     private SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor token;
 
     @BeforeEach
@@ -126,6 +133,10 @@ public class LibraryCardBooksControllerTest {
         libraryCard.setReader(reader);
         libraryCardRepository.save(libraryCard);
 
+        notificationStatus = notificationStatusRepository.findByStatusName(NotificationStatusName.PENDING)
+                .orElseThrow(() -> new ResourceNotFoundException("notification status 'pending'"
+                        + " not found"));
+
         libraryCardBooks = Instancio.of(modelGenerator.getLibraryCardBooksModel()).create();
 
         book = Instancio.of(modelGenerator.getBookModel()).create();
@@ -137,6 +148,7 @@ public class LibraryCardBooksControllerTest {
         libraryCardRepository.save(libraryCard);
         libraryCardBooks.setBook(book);
         libraryCardBooks.setLibraryCard(libraryCard);
+        libraryCardBooks.setNotificationStatus(notificationStatus);
         cardBooksRepository.save(libraryCardBooks);
 
         token = jwt().jwt(builder -> builder

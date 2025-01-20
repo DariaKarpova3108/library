@@ -22,7 +22,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -38,7 +39,7 @@ public class LibraryCard implements BaseEntity {
     private Long id;
 
     @OneToMany(mappedBy = "libraryCard", fetch = FetchType.LAZY)
-    private Set<LibraryCardBooks> borrowedBooks;
+    private List<LibraryCardBooks> borrowedBooks = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "reader_id", referencedColumnName = "id", nullable = false)

@@ -74,7 +74,7 @@ public class Reader implements BaseEntity {
     @Column(name = "address")
     private String address;
 
-    @OneToOne(mappedBy = "reader", cascade = CascadeType.ALL, optional = true)
+    @OneToOne(mappedBy = "reader", cascade = CascadeType.ALL, optional = false)
     private User user;
 
     @CreatedDate

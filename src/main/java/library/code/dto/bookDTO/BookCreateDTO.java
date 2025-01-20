@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -30,7 +31,7 @@ public class BookCreateDTO {
 
     @NotNull
     @JsonProperty("genre_types")
-    private Set<String> genreTypes;
+    private Set<String> genreTypes = new HashSet<>();
 
     @NotNull
     @JsonProperty("ISBN")

@@ -25,10 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
 )
 public abstract class LibraryCardBookMapper {
-
     @Autowired
     private BookRepository bookRepository;
-
     @Autowired
     private LibraryCardRepository libraryCardRepository;
 
@@ -38,6 +36,7 @@ public abstract class LibraryCardBookMapper {
 
     @Mapping(target = "libraryCardNumber", source = "libraryCard.cardNumber")
     @Mapping(target = "bookTitle", source = "book.bookTitle")
+    @Mapping(target = "notificationStatus", source = "notificationStatus.statusName")
     public abstract LibraryCardBookDTO map(LibraryCardBooks libraryCardBooks);
 
     @Mapping(target = "book", source = "bookId", qualifiedByName = "findBook")

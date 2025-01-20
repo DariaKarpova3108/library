@@ -6,7 +6,10 @@ import library.code.dto.libraryCardBooksDTO.LibraryCardBookUpdateDTO;
 import library.code.exception.ResourceNotFoundException;
 import library.code.mapper.LibraryCardBookMapper;
 import library.code.models.LibraryCardBooks;
+import library.code.models.NotificationStatus;
+import library.code.models.NotificationStatusName;
 import library.code.repositories.LibraryCardBooksRepository;
+import library.code.repositories.NotificationStatusRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,12 +18,13 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class LibraryCardBooksService {
     private final LibraryCardBooksRepository cardBooksRepository;
     private final LibraryCardBookMapper cardBookMapper;
+    private final NotificationStatusRepository notificationStatusRepository;
 
     public List<LibraryCardBookDTO> getAllBooksInCardBooks(Long libraryCardId) {
         log.info("Fetching all books in library card books");
@@ -50,10 +54,15 @@ public class LibraryCardBooksService {
     public LibraryCardBookDTO createNewRecordInCardBooks(LibraryCardBookCreateDTO createDTO) {
         log.info("Creating a new record about book in a library data card: {}", createDTO);
         var cardBooks = cardBookMapper.map(createDTO);
-        cardBooksRepository.save(cardBooks);
 
         LocalDate expectedReturnDate = cardBooks.getBorrowDate().plusWeeks(4);
+        NotificationStatus status = notificationStatusRepository.findByStatusName(NotificationStatusName.PENDING)
+                .orElseThrow(() -> new ResourceNotFoundException("notification status 'pending'"
+                        + " not found"));
+
         cardBooks.setExpectedReturn(expectedReturnDate);
+        cardBooks.setNotificationStatus(status);
+        cardBooksRepository.save(cardBooks);
 
         log.info("The record library card was successfully created with an expected return date: {}",
                 expectedReturnDate);

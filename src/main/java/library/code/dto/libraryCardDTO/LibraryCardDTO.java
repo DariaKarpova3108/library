@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -28,5 +28,5 @@ public class LibraryCardDTO {
     private LocalDate createdAt;
 
     @JsonProperty("borrowed_books")
-    private Set<LibraryCardBookDTO> borrowedBooks;
+    private List<LibraryCardBookDTO> borrowedBooks;
 }

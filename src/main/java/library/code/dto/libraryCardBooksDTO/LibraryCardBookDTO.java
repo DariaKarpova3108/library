@@ -29,4 +29,7 @@ public class LibraryCardBookDTO {
     @JsonProperty("actual_return_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate actualDate;
+
+    @JsonProperty("notification_status")
+    private String notificationStatus;
 }

@@ -55,4 +55,8 @@ public class LibraryCardBooks implements BaseEntity {
     @ToString.Include
     @Column(name = "actual_return_date")
     private LocalDate actualDate;
+
+    @ManyToOne
+    @JoinColumn(name = "notification_status_id", nullable = false)
+    private NotificationStatus notificationStatus;
 }
